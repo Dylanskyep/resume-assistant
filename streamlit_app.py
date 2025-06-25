@@ -48,7 +48,7 @@ with tab2:
                         st.write(f"- {line}")
                 else:
                     st.write("Please check the PDF file format or job focus to ensure they are valid.")
-            st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
+        st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
     else:
         st.write("Please upload a PDF file of your resume before clicking the button.")
 

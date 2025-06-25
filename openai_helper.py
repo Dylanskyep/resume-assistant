@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import os
 import fitz
 from dotenv import load_dotenv
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 # Set OpenAI API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI()
 
 def generate_bullets(experience, job_title):
     prompt = f""" You are a professional resume writer.
@@ -14,7 +14,7 @@ def generate_bullets(experience, job_title):
     Experience: {experience}
     Job Title: {job_title}
     Bullet Points:"""
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful and educated resume reviewer."},
@@ -39,7 +39,7 @@ def critique_resume(pdf_file, job_focus):
         Job Focus: {job_focus if job_focus else "General"}
         Provide feedback on structure, content, and areas for improvement in a format
         of two bullet points for strengths, two bullet points for weaknesses, and two bullet points for suggestions per section."""
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful and educated resume reviewer."},
