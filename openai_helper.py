@@ -15,7 +15,7 @@ def generate_bullets(experience, job_title):
     Job Title: {job_title}
     Bullet Points:"""
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful and educated resume reviewer."},
             {"role": "user", "content": prompt}
@@ -40,7 +40,7 @@ def critique_resume(pdf_file, job_focus):
         Provide feedback on structure, content, and areas for improvement in a format
         of two bullet points for strengths, two bullet points for weaknesses, and two bullet points for suggestions per section."""
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful and educated resume reviewer."},
                 {"role": "user", "content": prompt}
