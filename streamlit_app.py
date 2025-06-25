@@ -28,9 +28,9 @@ with tab1:
                 bullets = generate_bullets(experience, job_title)
             for word in bullets:
                 st.write(f"- {word}")
+            st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
         else:
             st.write("Please enter both experience details and job title to generate bullet points.")
-    st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
 
 
 # Critique Resume Section
@@ -48,10 +48,10 @@ with tab2:
                         st.write(f"- {line}")
                 else:
                     st.write("Please check the PDF file format or job focus to ensure they are valid.")
+            st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
     else:
         st.write("Please upload a PDF file of your resume before clicking the button.")
 
-    st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
 
 
 
