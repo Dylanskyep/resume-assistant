@@ -14,7 +14,7 @@ if st.session_state.page == "welcome":
     st.markdown("Create and review resumes using AI-powered tools.")
     if st.button("Continue to Main Page"):
         st.session_state.page = "main"
-        st.experimental_rerun()
+        st.rerun()
 
 elif st.session_state.page == "main":
     # Streamlit app for resume review and bullet point generation
