@@ -6,6 +6,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # Streamlit app for resume review and bullet point generation
 st.title("Create and Review Resumes using AI")
+st.set_page_config(layout="wide") 
 st.markdown("""
     This app allows you to generate bullet points for a resume based on a given experience and job title,
     and to critique an existing resume PDF file.
@@ -31,8 +32,8 @@ with tab1:
 # Critique Resume Section
 with tab2:
     st.header("Create Resume Critiques")
-    pdf_file = st.file_uploader("Upload you resume as a PDF file", type=["pdf"])
-    job_focus = st.text_input("Enter the job focus (optional):")
+    pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
+    job_focus = st.text_input("Enter the job focus (optional but helpful):")
     if pdf_file is not None:
         if st.button("Critique Resume"):
             with st.spinner("Generating resume critiques..."):
