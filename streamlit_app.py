@@ -3,14 +3,13 @@ import streamlit as st
 import os
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-st.set_page_config(layout="wide")
+st.set_page_config(layout="centered")
 
 #Welcome Page
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
 if st.session_state.page == "welcome":
-    st.set_page_config(layout="centered")
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
     if st.button("Continue to Main Page"):
