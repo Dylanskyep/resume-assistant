@@ -28,7 +28,6 @@ with tab1:
         else:
             st.write("Please enter both experience details and job title to generate bullet points.")
 
-
 # Critique Resume Section
 with tab2:
     st.header("Create Resume Critiques")
@@ -42,9 +41,9 @@ with tab2:
                     st.subheader("Results")
                     for line in critique:
                         st.write(f"- {line}")
+                    st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
                 else:
                     st.write("Please check the PDF file format or job focus to ensure they are valid.")
-        st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
     else:
         st.write("Please upload a PDF file of your resume before clicking the button.")
 
