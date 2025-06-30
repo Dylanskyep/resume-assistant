@@ -69,15 +69,20 @@ def critique_resume(pdf_file, job_focus):
                 Provide feedback on structure, content, and areas for improvement in a format
                 of two bullet points for strengths, two bullet points for weaknesses, and two bullet points for suggestions per section.
                 Organize your feedback clearly using labeled sections like:
-                **Strengths**
+                In bold, write the section title with slightly larger font, followed by bullet points for each category.
+                In a font slightly smaller than the section title, write the strengths, weaknesses, and suggestions headings.
+                Then, list the bullet points after each corresponding heading.
+                Example:
+                Title of Section in Bold and slightly larger font
+                Strengths
                 - ...
                 - ...
 
-                **Weaknesses**
+                Weaknesses
                 - ...
                 - ...
 
-                **Suggestions**
+                Suggestions
                 - ...
                 - ...
                 """}
