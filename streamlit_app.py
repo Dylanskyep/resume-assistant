@@ -1,13 +1,12 @@
 from openai_helper import generate_bullets, critique_resume
-import openai
 import streamlit as st
 import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-# Set OpenAI API key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # Streamlit app for resume review and bullet point generation
 st.title("Create and Review Resumes using AI")
