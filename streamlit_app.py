@@ -24,7 +24,7 @@ tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 #Generate Bullet Points Section
 with tab1:
     st.header("Create Resume Experience Bullet Points")
-    experience = st.text_area("Enter your experience details:", height=150)
+    experience = st.text_area("Enter your experience details:", height=150, layout="centered", width=500)
     job_title = st.text_input("Enter the job title:")
     if st.button("Generate Bullet Points"):
         if experience and job_title:
