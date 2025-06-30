@@ -40,8 +40,15 @@ with tab2:
                 if critique:
                     st.subheader("Results")
                     for line in critique:
-                        st.write(f"- {line}")
+                        stripped = line.strip()
+                    if stripped:
+                        if stripped.startswith(("-", "•", "*")):
+                            st.markdown(f"{stripped}")
+                        else:
+                            st.markdown(f"- {stripped}")
+
                     st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
+
                 else:
                     st.write("Please check the PDF file format or job focus to ensure they are valid.")
     else:
