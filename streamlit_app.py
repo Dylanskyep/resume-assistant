@@ -21,8 +21,9 @@ with tab1:
         if experience and job_title:
             with st.spinner("Generating bullet points..."):
                 bullets = generate_bullets(experience, job_title)
-            for word in bullets:
-                st.write(f"- {word}")
+            for line in bullets:
+                if line.strip().startswith(("-", "•", "*")):
+                    st.write(line.strip())
             st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
         else:
             st.write("Please enter both experience details and job title to generate bullet points.")
