@@ -22,21 +22,27 @@ elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI")
     # Custom CSS to adjust the layout   
     st.markdown("""
-        <style>
-        .main .block-container {
-            max-width: 75%;
-            padding-left: 4em;
-            padding-right: 4rem;
-            margin: auto;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+    <style>
+    .center-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 3rem;
+        text-align: center;
+    }
+    .stTextInput > div > input, .stTextArea > div > textarea {
+        width: 600px !important;
+        margin: 0 auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
     #Generate Bullet Points Section
     with tab1:
-        st.header("Create Resume Experience Bullet Points")
+        st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
         job_title = st.text_input("Enter the job title:")
         if st.button("Generate Bullet Points"):
@@ -52,7 +58,7 @@ elif st.session_state.page == "main":
 
     # Critique Resume Section
     with tab2:
-        st.header("Create Resume Critiques")
+        st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
         job_focus = st.text_input("Enter the job focus (optional but helpful):")
         if pdf_file is not None:
