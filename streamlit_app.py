@@ -3,6 +3,7 @@ import streamlit as st
 import os
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+st.set_page_config(layout="wide")
 
 #Welcome Page
 if "page" not in st.session_state:
@@ -17,7 +18,6 @@ if st.session_state.page == "welcome":
 elif st.session_state.page == "main":
     # Streamlit app for resume review and bullet point generation
     st.title("Create and Review Resumes using AI")
-    st.set_page_config(layout="wide")
     # Custom CSS to adjust the layout   
     st.markdown("""
         <style>
