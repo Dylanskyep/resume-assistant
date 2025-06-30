@@ -16,7 +16,9 @@ def generate_bullets(experience, job_title):
             {"role": "system", "content": "You are a helpful and educated resume reviewer."},
             {"role": "user", "content": f"""
             You are a professional resume writer.
-            Generate 3-5 bullet points for a resume based on the following experience and job title.
+            Generate 3-5 bullet points for a resume based on the following experience and job title using the SMART framework (Specific, Measurable, Achievable, Relevant, and Time-bound). 
+            Each bullet point should describe a concrete impact or achievement from the experience below, tailored to the provided job title.
+            Use action verbs, quantify results where possible, and focus on accomplishments.
             Experience: {experience}
             Job Title: {job_title}
             Bullet Points:
