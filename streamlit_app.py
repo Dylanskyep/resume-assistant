@@ -12,7 +12,7 @@ def load_lottie_url(url):
         return None
     return r.json()
 
-bg_animation = load_lottie_url("https://lottie.host/016dd330-a6e5-4e9a-9e1a-e53bba509e2f/3zZGR5P9qJ.json")
+bg_animation = load_lottie_url("https://app.lottiefiles.com/share/465f5a5f-27d7-4037-9457-5ced28b7cadf")
 
 # Use HTML/CSS to position animation in background
 st.markdown("""
@@ -35,26 +35,6 @@ st.markdown("""
     h1, p, .stButton {
         z-index: 1;
         position: relative;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Container to hold Lottie background
-with st.container():
-    st_lottie(bg_animation, speed=1, loop=True, quality="low", height=800, key="background")
-st.markdown("""
-    <style>
-    .center-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding-top: 3rem;
-        text-align: center;
-    }
-    .stTextInput > div > input, .stTextArea > div > textarea {
-        width: 600px !important;
-        margin: 0 auto;
     }
     </style>
 """, unsafe_allow_html=True)
