@@ -1,9 +1,7 @@
 import os
 import requests
-from dotenv import load_dotenv
 import fitz  # for PDF reading
 
-load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def generate_bullets(experience, job_title):
