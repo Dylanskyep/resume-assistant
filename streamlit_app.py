@@ -10,6 +10,7 @@ if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
 if st.session_state.page == "welcome":
+    st.set_page_config(layout="centered")
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
     if st.button("Continue to Main Page"):
