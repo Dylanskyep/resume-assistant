@@ -4,24 +4,7 @@ import os
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="centered")
-
-#Welcome Page
-if "page" not in st.session_state:
-    st.session_state.page = "welcome"
-
-if st.session_state.page == "welcome":
-    st.title("Welcome to the Resume Assistant")
-    st.markdown("Create and review resumes using AI-powered tools.")
-    if st.button("Continue to Main Page"):
-        st.session_state.page = "main"
-        st.rerun()
-
-elif st.session_state.page == "main":
-    # Streamlit app for resume review and bullet point generation
-    st.set_page_config(layout="wide")
-    st.title("Create and Review Resumes using AI")
-    # Custom CSS to adjust the layout   
-    st.markdown("""
+st.markdown("""
     <style>
     .center-container {
         display: flex;
@@ -37,6 +20,35 @@ elif st.session_state.page == "main":
     }
     </style>
 """, unsafe_allow_html=True)
+
+
+#Welcome Page
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
+
+if st.session_state.page == "welcome":
+    st.title("Welcome to the Resume Assistant")
+    st.markdown("Create and review resumes using AI-powered tools.")
+    if st.button("Continue to Main Page"):
+        st.session_state.page = "main"
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+elif st.session_state.page == "main":
+    # Streamlit app for resume review and bullet point generation
+    st.set_page_config(layout="wide")
+    st.title("Create and Review Resumes using AI")
+    # Custom CSS to adjust the layout   
+    st.markdown("""
+        <style>
+        .main .block-container {
+            max-width: 75%;
+            padding-left: 4em;
+            padding-right: 4rem;
+            margin: auto;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
@@ -55,6 +67,8 @@ elif st.session_state.page == "main":
                 st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # Critique Resume Section
     with tab2:
@@ -80,6 +94,9 @@ elif st.session_state.page == "main":
                         st.write("Please check the PDF file format or job focus to ensure they are valid.")
         else:
             st.write("Please upload a PDF file of your resume before clicking the button.")
+            
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
