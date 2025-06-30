@@ -40,12 +40,11 @@ with tab2:
                 if critique:
                     st.subheader("Results")
                     for line in critique:
-                        stripped = line.strip()
-                    if stripped:
-                        if stripped.startswith(("-", "•", "*")):
-                            st.markdown(f"{stripped}")
-                        else:
-                            st.markdown(f"- {stripped}")
+                        if line.strip():
+                             if line.strip().startswith(("-", "•", "*")):
+                                    st.write(line.strip())
+                             else:
+                                    st.markdown(f"**{line.strip()}**")  
 
                     st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
 
