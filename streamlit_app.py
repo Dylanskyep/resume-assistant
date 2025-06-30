@@ -10,7 +10,7 @@ st.set_page_config(layout="centered")
 st.markdown("""
     <style>
     .main .block-container {
-        max-width: 60%;
+        max-width: 75%;
         padding-left: 3rem;
         padding-right: 3rem;
         margin: auto;
