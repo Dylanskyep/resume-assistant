@@ -6,11 +6,11 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # Streamlit app for resume review and bullet point generation
 st.title("Create and Review Resumes using AI")
-st.set_page_config(layout="wide") 
+st.set_page_config(layout="centered") 
 st.markdown("""
     <style>
     .main .block-container {
-        max-width: 75%;
+        max-width: 60%;
         padding-left: 3rem;
         padding-right: 3rem;
         margin: auto;
