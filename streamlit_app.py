@@ -17,7 +17,8 @@ if st.session_state.page == "welcome":
 
 elif st.session_state.page == "main":
     # Streamlit app for resume review and bullet point generation
-    st.title("Create and Review Resumes using AI", layout="wide")
+    st.set_page_config(layout="wide")
+    st.title("Create and Review Resumes using AI")
     # Custom CSS to adjust the layout   
     st.markdown("""
         <style>
