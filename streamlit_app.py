@@ -8,9 +8,16 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.title("Create and Review Resumes using AI")
 st.set_page_config(layout="wide") 
 st.markdown("""
-    This app allows you to generate bullet points for a resume based on a given experience and job title,
-    and to critique an existing resume PDF file.
-""")
+    <style>
+    .main .block-container {
+        max-width: 75%;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        margin: auto;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
 #Generate Bullet Points Section
