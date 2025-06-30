@@ -1,9 +1,47 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
+from streamlit_lottie import st_lottie
+import requests
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="centered")
+def load_lottie_url(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+bg_animation = load_lottie_url("https://lottie.host/016dd330-a6e5-4e9a-9e1a-e53bba509e2f/3zZGR5P9qJ.json")
+
+# Use HTML/CSS to position animation in background
+st.markdown("""
+    <style>
+    .lottie-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    .main .block-container {
+        padding-top: 4rem;
+    }
+
+    h1, p, .stButton {
+        z-index: 1;
+        position: relative;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Container to hold Lottie background
+with st.container():
+    st_lottie(bg_animation, speed=1, loop=True, quality="low", height=800, key="background")
 st.markdown("""
     <style>
     .center-container {
@@ -96,8 +134,4 @@ elif st.session_state.page == "main":
             st.write("Please upload a PDF file of your resume before clicking the button.")
             
         st.markdown('</div>', unsafe_allow_html=True)
-
-
-
-
 
