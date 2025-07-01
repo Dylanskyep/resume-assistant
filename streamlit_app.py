@@ -18,19 +18,38 @@ st.set_page_config(layout="centered", page_title="Resume Assistant")
 # HTML + CSS: Lottie Background
 components.html(
     """
+    <!DOCTYPE html>
+    <html>
+    <head>
     <style>
-        body, .stApp {
-            background-color: transparent !important;
+        #lottie-background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
         }
     </style>
-
-    <div style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -1; pointer-events: none; opacity: 0.3;">
-        <iframe src="https://lottie.host/embed/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5"
-                style="width: 100%; height: 100%; border: none;">
-        </iframe>
-    </div>
+    </head>
+    <body>
+        <div id="lottie-background"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+        <script>
+            lottie.loadAnimation({
+                container: document.getElementById('lottie-background'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+            });
+        </script>
+    </body>
+    </html>
     """,
-    height=600,
+    height=0,
 )
 
 # Center content and control z-index
