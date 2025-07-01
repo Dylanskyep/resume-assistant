@@ -3,10 +3,28 @@ import streamlit as st
 import os
 from streamlit_lottie import st_lottie
 import requests
-import json
+import streamlit.components.v1 as components
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="centered")
+
+components.html(
+    """
+    <div style="position: fixed; width: 100%; height: 100%; z-index: -1; top: 0; left: 0; overflow: hidden;">
+        <lottie-player 
+            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"  
+            background="transparent"  
+            speed="1"  
+            style="width: 100%; height: 100%;"  
+            loop  
+            autoplay>
+        </lottie-player>
+    </div>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    """,
+    height=0,
+)
+
 def load_lottie_url(url):
     r = requests.get(url)
     if r.status_code != 200:
