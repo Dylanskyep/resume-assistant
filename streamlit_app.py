@@ -19,17 +19,15 @@ st.set_page_config(layout="centered", page_title="Resume Assistant")
 components.html(
     """
     <style>
-        body {
-            background: transparent !important;
-        }
-        .stApp {
-            background: transparent !important;
+        body, .stApp {
+            background-color: transparent !important;
         }
     </style>
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                z-index: -1; opacity: 0.5; overflow: hidden;">
+
+    <div style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -1; pointer-events: none; opacity: 0.3;">
         <iframe src="https://lottie.host/embed/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5"
-                style="width:100%; height:100%; border:none;"></iframe>
+                style="width: 100%; height: 100%; border: none;">
+        </iframe>
     </div>
     """,
     height=0,
