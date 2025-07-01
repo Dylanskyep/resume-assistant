@@ -1,119 +1,67 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
-from streamlit_lottie import st_lottie
-import requests
 import streamlit.components.v1 as components
 
+# Environment key (if needed)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-st.set_page_config(layout="centered")
 
+# Set page config
+st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
+
+# Inject Lottie animation as background
 components.html(
     """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-            }
-            #lottie {
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: -1;
-                width: 100vw;
-                height: 100vh;
-                opacity: 0.5;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="lottie"></div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
-        <script>
-            var animation = bodymovin.loadAnimation({
-                container: document.getElementById('lottie'),
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                path: 'https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json'
-            });
-        </script>
-    </body>
-    </html>
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden;">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player
+            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
+            background="transparent"
+            speed="1"
+            loop
+            autoplay
+            style="width: 100%; height: 100%;">
+        </lottie-player>
+    </div>
     """,
     height=0,
 )
-def load_lottie_url(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
 
-
-bg_animation = load_lottie_url("https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json")
-
-# Use HTML/CSS to position animation in background
+# Center content and control z-index
 st.markdown("""
     <style>
-    .lottie-background {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        z-index: -1;
-        opacity: 0.3;
-        pointer-events: none;
-    }
-
-    .main .block-container {
+    .block-container {
+        max-width: 75%;
+        margin: auto;
         padding-top: 4rem;
+        padding-bottom: 2rem;
     }
-
-    h1, p, .stButton {
+    h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
         z-index: 1;
         position: relative;
     }
     </style>
 """, unsafe_allow_html=True)
 
-
-#Welcome Page
+# Page state setup
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
+# Welcome Page
 if st.session_state.page == "welcome":
-    with st.container():
-        st_lottie(bg_animation, speed=1, loop=True, quality="low", height=600, key="bg")
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
     if st.button("Continue to Main Page"):
         st.session_state.page = "main"
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
 
+# Main Page
 elif st.session_state.page == "main":
-    # Streamlit app for resume review and bullet point generation
     st.title("Create and Review Resumes using AI")
-    # Custom CSS to adjust the layout   
-    st.markdown("""
-        <style>
-        .main .block-container {
-            max-width: 75%;
-            padding-left: 4em;
-            padding-right: 4rem;
-            margin: auto;
-        }
-        </style>
-    """, unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    #Generate Bullet Points Section
+    # Generate Bullet Points Section
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -129,8 +77,6 @@ elif st.session_state.page == "main":
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
 
-        st.markdown('</div>', unsafe_allow_html=True)
-
     # Critique Resume Section
     with tab2:
         st.header("Generate Resume Critiques")
@@ -145,16 +91,11 @@ elif st.session_state.page == "main":
                         for line in critique:
                             if line.strip():
                                 if line.strip().startswith(("-", "•", "*")):
-                                        st.write(line.strip())
+                                    st.write(line.strip())
                                 else:
-                                        st.markdown(f"**{line.strip()}**")  
-
+                                    st.markdown(f"**{line.strip()}**")
                         st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
-
                     else:
                         st.write("Please check the PDF file format or job focus to ensure they are valid.")
         else:
             st.write("Please upload a PDF file of your resume before clicking the button.")
-            
-        st.markdown('</div>', unsafe_allow_html=True)
-
