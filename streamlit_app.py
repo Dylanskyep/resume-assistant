@@ -1,58 +1,53 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
-import streamlit.components.v1 as components
+import requests
+from streamlit.components.v1 import html
 
-# Environment key (if needed)
+# Set environment key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Set page config
+# Page config
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
-# Inject Lottie animation as background
-import streamlit as st
-import streamlit.components.v1 as components
-
-st.set_page_config(layout="centered", page_title="Resume Assistant")
-
-# HTML + CSS: Lottie Background
-components.html(
-    """
-    <!DOCTYPE html>
-    <html>
-    <head>
+# --- Inject full-page Lottie background using HTML + JS ---
+st.markdown("""
     <style>
-        #lottie-background {
+        .lottie-background-container {
             position: fixed;
             width: 100vw;
             height: 100vh;
             top: 0;
             left: 0;
-            z-index: -4;
-            opacity: 0.3;
+            z-index: -1;
+            opacity: 0.25;
             pointer-events: none;
         }
+        .block-container {
+            position: relative;
+            z-index: 1;
+        }
     </style>
-    </head>
-    <body>
-        <div id="lottie-background"></div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-        <script>
+    <div class="lottie-background-container" id="lottie-container"></div>
+""", unsafe_allow_html=True)
+
+html("""
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+    <script>
+        const container = document.getElementById("lottie-container");
+        if (container) {
             lottie.loadAnimation({
-                container: document.getElementById('lottie-background'),
-                renderer: 'svg',
+                container: container,
+                renderer: "svg",
                 loop: true,
                 autoplay: true,
-                path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
             });
-        </script>
-    </body>
-    </html>
-    """,
-    height=600,
-)
+        }
+    </script>
+""", height=0)
 
-# Center content and control z-index
+# --- Styling for content ---
 st.markdown("""
     <style>
     .block-container {
@@ -68,11 +63,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Page state setup
+# --- Page State ---
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
-# Welcome Page
+# --- Welcome Page ---
 if st.session_state.page == "welcome":
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
@@ -80,13 +75,12 @@ if st.session_state.page == "welcome":
         st.session_state.page = "main"
         st.rerun()
 
-# Main Page
+# --- Main App Page ---
 elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI")
-
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    # Generate Bullet Points Section
+    # --- Bullet Points Tab ---
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -102,7 +96,7 @@ elif st.session_state.page == "main":
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
 
-    # Critique Resume Section
+    # --- Resume Critique Tab ---
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
