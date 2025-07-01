@@ -30,7 +30,7 @@ components.html(
         </iframe>
     </div>
     """,
-    height=0,
+    height=600,
 )
 
 # Center content and control z-index
