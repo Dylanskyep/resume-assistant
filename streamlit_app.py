@@ -20,11 +20,11 @@ components.html(
             speed="1"
             loop
             autoplay
-            style="width: 100%; height: 100%;">
+            style="width: 100vw; height: 100vh;">
         </lottie-player>
     </div>
     """,
-    height=1000,
+    height=1000,  # This is what makes it visible!
 )
 
 # Center content and control z-index
