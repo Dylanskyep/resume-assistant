@@ -10,10 +10,24 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
 # Inject Lottie animation as background
+import streamlit as st
+import streamlit.components.v1 as components
+
+st.set_page_config(layout="centered", page_title="Resume Assistant")
+
+# HTML + CSS: Lottie Background
 components.html(
     """
+    <style>
+        body {
+            background: transparent !important;
+        }
+        .stApp {
+            background: transparent !important;
+        }
+    </style>
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                z-index: -1; opacity: 0.3; overflow: hidden;">
+                z-index: -1; opacity: 0.5; overflow: hidden;">
         <iframe src="https://lottie.host/embed/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5"
                 style="width:100%; height:100%; border:none;"></iframe>
     </div>
