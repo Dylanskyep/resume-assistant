@@ -12,19 +12,13 @@ st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝
 # Inject Lottie animation as background
 components.html(
     """
-    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden;">
-        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-        <lottie-player
-            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
-            background="transparent"
-            speed="1"
-            loop
-            autoplay
-            style="width: 100vw; height: 100vh;">
-        </lottie-player>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                z-index: -1; opacity: 0.3; overflow: hidden;">
+        <iframe src="https://lottie.host/embed/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5"
+                style="width:100%; height:100%; border:none;"></iframe>
     </div>
     """,
-    height=1000,  # This is what makes it visible!
+    height=0,
 )
 
 # Center content and control z-index
