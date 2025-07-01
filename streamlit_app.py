@@ -3,6 +3,7 @@ import streamlit as st
 import os
 from streamlit_lottie import st_lottie
 import requests
+import json
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="centered")
@@ -12,7 +13,8 @@ def load_lottie_url(url):
         return None
     return r.json()
 
-bg_animation = load_lottie_url("https://app.lottiefiles.com/share/465f5a5f-27d7-4037-9457-5ced28b7cadf")
+with open("file:///Users/dylanpanganiban/Downloads/Animation%20-%201751327503596.json", "r") as f:
+    bg_animation = json.load(f)
 
 # Use HTML/CSS to position animation in background
 st.markdown("""
