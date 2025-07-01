@@ -43,7 +43,7 @@ components.html(
                 renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                path: 'https://lottie.host/embed/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
             });
         </script>
     </body>
