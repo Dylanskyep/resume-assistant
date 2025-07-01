@@ -14,7 +14,7 @@ def load_lottie_url(url):
     return r.json()
 
 
-bg_animation = load_lottie_url("https://lottie.host/2aa0bd62-5497-475a-918c-ade1df2eb5b3/meyPSNr0Ql.lottie")
+bg_animation = load_lottie_url("https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json")
 
 # Use HTML/CSS to position animation in background
 st.markdown("""
