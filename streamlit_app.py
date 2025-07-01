@@ -10,39 +10,43 @@ st.set_page_config(layout="centered")
 
 components.html(
     """
+    <!DOCTYPE html>
     <html>
     <head>
-      <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-      <style>
-        body {
-          margin: 0;
-        }
-        #bg {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          z-index: -1;
-          opacity: 0.4;
-        }
-      </style>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            #lottie {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                width: 100vw;
+                height: 100vh;
+                opacity: 0.5;
+            }
+        </style>
     </head>
     <body>
-      <lottie-player
-        id="bg"
-        src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
-        background="transparent"
-        speed="1"
-        loop
-        autoplay
-      ></lottie-player>
+        <div id="lottie"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+        <script>
+            var animation = bodymovin.loadAnimation({
+                container: document.getElementById('lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json'
+            });
+        </script>
     </body>
     </html>
     """,
     height=0,
 )
-
 def load_lottie_url(url):
     r = requests.get(url)
     if r.status_code != 200:
