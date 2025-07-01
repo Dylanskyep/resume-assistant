@@ -10,19 +10,39 @@ st.set_page_config(layout="centered")
 
 components.html(
     """
-    <div style="position: fixed; width: 100%; height: 100%; z-index: -1; top: 0; left: 0; overflow: hidden;">
+    <html>
+    <head>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100vw;
+            height: 100vh;
+            opacity: 0.4;
+        }
+    </style>
+    </head>
+    <body>
         <lottie-player 
-            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"  
+            id="bg"
+            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
             background="transparent"  
             speed="1"  
-            style="width: 100%; height: 100%;"  
             loop  
             autoplay>
         </lottie-player>
-    </div>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    </body>
+    </html>
     """,
-    height=0,
+    height=600,
 )
 
 def load_lottie_url(url):
