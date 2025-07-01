@@ -49,7 +49,7 @@ components.html(
     </body>
     </html>
     """,
-    height=600,
+    height=1000,
 )
 
 # Center content and control z-index
