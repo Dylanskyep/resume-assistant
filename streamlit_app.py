@@ -13,8 +13,8 @@ def load_lottie_url(url):
         return None
     return r.json()
 
-with open("file:///Users/dylanpanganiban/Downloads/Animation%20-%201751327503596.json", "r") as f:
-    bg_animation = json.load(f)
+
+bg_animation = load_lottie_url("https://lottie.host/2aa0bd62-5497-475a-918c-ade1df2eb5b3/meyPSNr0Ql.lottie")
 
 # Use HTML/CSS to position animation in background
 st.markdown("""
@@ -47,6 +47,8 @@ if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
 if st.session_state.page == "welcome":
+    with st.container():
+        st_lottie(bg_animation, speed=1, loop=True, quality="low", height=600, key="bg")
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
     if st.button("Continue to Main Page"):
@@ -56,7 +58,6 @@ if st.session_state.page == "welcome":
 
 elif st.session_state.page == "main":
     # Streamlit app for resume review and bullet point generation
-    st.set_page_config(layout="wide")
     st.title("Create and Review Resumes using AI")
     # Custom CSS to adjust the layout   
     st.markdown("""
