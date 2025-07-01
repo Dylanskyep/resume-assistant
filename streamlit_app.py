@@ -1,7 +1,6 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
-import requests
 from streamlit.components.v1 import html
 
 # Set environment key
@@ -10,42 +9,41 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # Page config
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
-# --- Inject full-page Lottie background using HTML + JS ---
-st.markdown("""
-    <style>
-        .lottie-background-container {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: 0.25;
-            pointer-events: none;
-        }
-        .block-container {
-            position: relative;
-            z-index: 1;
-        }
-    </style>
-    <div class="lottie-background-container" id="lottie-container"></div>
-""", unsafe_allow_html=True)
+html(
+    """
+    <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 0.5; outline: 5px dashed red;">
+        <div id="lottie-background" style="width: 100%; height: 100%;"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+        <script>
+            console.log("⏳ Injecting Lottie...");
+            const container = document.getElementById('lottie-background');
+            if (!container) {
+                console.error("❌ Lottie container not found!");
+            } else {
+                console.log("✅ Found Lottie container");
+            }
 
-html("""
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-    <script>
-        const container = document.getElementById("lottie-container");
-        if (container) {
-            lottie.loadAnimation({
+            const animation = lottie.loadAnimation({
                 container: container,
-                renderer: "svg",
+                renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
+                path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
             });
-        }
-    </script>
-""", height=0)
+
+            animation.addEventListener('DOMLoaded', function () {
+                console.log("🎉 Lottie animation loaded!");
+            });
+
+            animation.addEventListener('error', function (e) {
+                console.error("🚨 Lottie failed to load", e);
+            });
+        </script>
+    </div>
+    """,
+    height=0  # leave as 0 so it doesn’t push content
+)
+
 
 # --- Styling for content ---
 st.markdown("""
