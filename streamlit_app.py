@@ -28,7 +28,7 @@ components.html(
             height: 100vh;
             top: 0;
             left: 0;
-            z-index: -1;
+            z-index: -4;
             opacity: 0.3;
             pointer-events: none;
         }
@@ -49,7 +49,7 @@ components.html(
     </body>
     </html>
     """,
-    height=1000,
+    height=600,
 )
 
 # Center content and control z-index
