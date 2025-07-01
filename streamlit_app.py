@@ -12,37 +12,35 @@ components.html(
     """
     <html>
     <head>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <style>
+      <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+      <style>
         body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+          margin: 0;
         }
         #bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            width: 100vw;
-            height: 100vh;
-            opacity: 0.4;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          z-index: -1;
+          opacity: 0.4;
         }
-    </style>
+      </style>
     </head>
     <body>
-        <lottie-player 
-            id="bg"
-            src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
-            background="transparent"  
-            speed="1"  
-            loop  
-            autoplay>
-        </lottie-player>
+      <lottie-player
+        id="bg"
+        src="https://lottie.host/2b7567f6-52b5-408e-8932-9b339f4b3201/F8zKtZW4Bi.json"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
     </body>
     </html>
     """,
-    height=600,
+    height=0,
 )
 
 def load_lottie_url(url):
