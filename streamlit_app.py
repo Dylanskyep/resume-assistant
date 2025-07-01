@@ -24,7 +24,7 @@ components.html(
         </lottie-player>
     </div>
     """,
-    height=0,
+    height=1000,
 )
 
 # Center content and control z-index
