@@ -201,9 +201,9 @@ elif st.session_state.page == "main":
         margin-top: 2rem;
         animation: slideInLeft 1s ease-out forwards;
     }
-    @keyframes slideInLeft {
-        0% { transform: translateX(-100%); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
     </style>
 """, unsafe_allow_html=True)
