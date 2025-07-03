@@ -90,19 +90,6 @@ st.markdown("""
     input, textarea {
         font-size: 18px !important;
     }
-            
-    .back-button-container {
-        position: fixed;
-        top: 1.5rem;
-        left: 1.5rem;
-        z-index: 999;
-}
-
-    .back-button-container button {
-        background-color: #ffffff;
-        padding: 0.4rem 0.8rem;
-        
-}
 
 
     </style>
@@ -124,19 +111,6 @@ elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    # Render a raw HTML button pinned to the top-left corner
-    st.markdown("""
-        <form action="" method="get">
-            <div class="back-button-container">
-                <button name="back" type="submit">← Back to Welcome Page</button>
-            </div>
-        </form>
-    """, unsafe_allow_html=True)
-
-    # Check query params for "back"
-    if "back" in st.query_params:
-        st.session_state.page = "welcome"
-        st.rerun()
 
     # Bullet Points Tab
     with tab1:
