@@ -100,7 +100,6 @@ st.markdown("""
 
     .back-button-container button {
         background-color: #ffffff;
-        border-radius: 8px;
         padding: 0.4rem 0.8rem;
         
 }
@@ -125,20 +124,19 @@ elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-# Render a raw HTML button pinned top-left
-st.markdown("""
-    <form action="" method="post">
-        <div class="back-button-container">
-            <button name="back" type="submit">← Back to Welcome Page</button>
-        </div>
-    </form>
-""", unsafe_allow_html=True)
+    # Render a raw HTML button pinned to the top-left corner
+    st.markdown("""
+        <form action="" method="get">
+            <div class="back-button-container">
+                <button name="back" type="submit">← Back to Welcome Page</button>
+            </div>
+        </form>
+    """, unsafe_allow_html=True)
 
-# Respond to the raw button click
-if st.session_state.get("page") == "main" and st.experimental_get_query_params().get("back") is not None:
-    st.session_state.page = "welcome"
-    st.rerun()
-
+    # Check query params for "back"
+    if "back" in st.query_params:
+        st.session_state.page = "welcome"
+        st.rerun()
 
     # Bullet Points Tab
     with tab1:
