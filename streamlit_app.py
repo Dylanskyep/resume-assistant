@@ -92,14 +92,14 @@ if "page" not in st.session_state:
 # Welcome Page
 if st.session_state.page == "welcome":
     st.title("Welcome to the Resume Assistant")
-    st.markdown("Create and review resumes using AI-powered tools.")
+    st.markdown("This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!")
     if st.button("Continue to Main Page"):
         st.session_state.page = "main"
         st.rerun()
 
 # Main App Page
 elif st.session_state.page == "main":
-    st.title("Create and Review Resumes using AI")
+    st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
     # Bullet Points Tab
