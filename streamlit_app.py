@@ -84,8 +84,17 @@ st.markdown("""
         position: relative;
         font_size: 20px;
     }
+    title{
+        position: fixed;
+    }
     input, textarea {
         font-size: 18px !important;
+    }
+    .stButton button {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 10;
     }
 
     </style>
@@ -106,6 +115,12 @@ if st.session_state.page == "welcome":
 elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
+
+    if st.button("Back to Welcome Page"):
+        st.session_state.page = "welcome"
+        st.rerun()
+        
+        
 
     # Bullet Points Tab
     with tab1:
