@@ -199,9 +199,9 @@ elif st.session_state.page == "main":
         font-weight: 800;
         text-align: center;
         margin-top: 2rem;
-        animation: fadeSlideIn 1s ease-out forwards;
+        animation: slideInLeft 1s ease-out forwards;
     }
-    @keyframes fadeSlideIn {
+    @keyframes slideInLeft {
         0% {
             opacity: 0;
             transform: translateY(-20px);
