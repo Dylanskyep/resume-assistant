@@ -7,20 +7,12 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 st.markdown("""
     <style>
-    html, body, #root, .stApp {
-        margin: 0 !important;
-        padding: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
+    html, body, .stApp {
+        margin: 0;
+        padding: 0;
+        height: 100%;
         background-color: transparent !important;
         overflow: hidden;
-    }
-
-    .main, .block-container {
-        padding-top: 0rem !important;
-        padding-bottom: 0rem !important;
-        margin: 0 !important;
-        height: 100% !important;
     }
 
     .lottie-bg-container {
@@ -47,8 +39,8 @@ st.markdown("""
                     padding: 0;
                     height: 100%;
                     width: 100%;
-                    background: transparent;
                     overflow: hidden;
+                    background: transparent;
                 }
                 #lottie {
                     width: 100vw;
@@ -71,7 +63,6 @@ st.markdown("""
         </html>
     " width="100%" height="100%" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
-
 
 st.markdown("""
     <style>
