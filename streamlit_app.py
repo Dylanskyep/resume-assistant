@@ -1,16 +1,30 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
-from streamlit.components.v1 import html
 
 # Set environment key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Page config
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
+#Inject full-page background animation
 st.markdown("""
-    <div id="lottie-background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; opacity: 0.5;"></div>
+    <style>
+    .stApp {
+        background-color: transparent !important;
+    }
+    </style>
+
+    <div id="lottie-background" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.5;">
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
     <script>
@@ -39,7 +53,6 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-
 st.markdown("""
     <style>
     .block-container {
@@ -55,11 +68,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- Page State ---
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
-# --- Welcome Page ---
+#Welcome Page
 if st.session_state.page == "welcome":
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
@@ -67,12 +79,12 @@ if st.session_state.page == "welcome":
         st.session_state.page = "main"
         st.rerun()
 
-# --- Main App Page ---
+#Main App Page
 elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    # --- Bullet Points Tab ---
+    # Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -88,7 +100,7 @@ elif st.session_state.page == "main":
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
 
-    # --- Resume Critique Tab ---
+    #Resume Critique
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
