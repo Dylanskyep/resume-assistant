@@ -7,6 +7,14 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 st.markdown("""
     <style>
+    html, body, .stApp {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: transparent !important;
+        overflow: hidden;
+    }
+
     .lottie-bg-container {
         position: fixed;
         top: 0;
@@ -18,59 +26,42 @@ st.markdown("""
         pointer-events: none;
         border: none;
     }
-    .stApp {
-        background-color: transparent !important;
-    }
     </style>
 
-    <iframe class="lottie-bg-container" srcdoc='
+    <iframe class="lottie-bg-container" srcdoc="
         <!DOCTYPE html>
         <html>
         <head>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js'></script>
             <style>
                 html, body {
                     margin: 0;
                     padding: 0;
                     height: 100%;
                     width: 100%;
-                    background: transparent;
                     overflow: hidden;
+                    background: transparent;
                 }
                 #lottie {
                     width: 100vw;
                     height: 100vh;
                 }
-                svg {
-                    width: 100% !important;
-                    height: 100% !important;
-                }
             </style>
         </head>
         <body>
-            <div id="lottie"></div>
+            <div id='lottie'></div>
             <script>
-                const animation = lottie.loadAnimation({
-                    container: document.getElementById("lottie"),
-                    renderer: "svg",
+                lottie.loadAnimation({
+                    container: document.getElementById('lottie'),
+                    renderer: 'svg',
                     loop: true,
                     autoplay: true,
-                    path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
-                });
-
-                animation.addEventListener("DOMLoaded", function () {
-                    const svg = document.querySelector("svg");
-                    if (svg) {
-                        svg.setAttribute("preserveAspectRatio", "none");
-                        console.log("✅ SVG stretched");
-                    } else {
-                        console.error("❌ SVG not found");
-                    }
+                    path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
                 });
             </script>
         </body>
         </html>
-    ' width="100%" height="100%" frameborder="0"></iframe>
+    " width="100%" height="100%" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
 
 st.markdown("""
