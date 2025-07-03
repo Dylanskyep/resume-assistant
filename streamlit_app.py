@@ -99,7 +99,6 @@ st.markdown("""
     }
     .welcome-desc {   
             font-size: 24px;
-            font-weight: 400;
             text-align: center;
             animation: fadeIn 1.3s ease-out forwards;
 
