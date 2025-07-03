@@ -7,25 +7,19 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 st.markdown("""
     <style>
-    html, body, #root, .stApp {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: transparent !important;
-    }
-
     .lottie-bg-container {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         z-index: 0;
         opacity: 0.5;
         pointer-events: none;
         border: none;
+    }
+    .stApp {
+        background-color: transparent !important;
     }
     </style>
 
@@ -38,25 +32,41 @@ st.markdown("""
                 html, body {
                     margin: 0;
                     padding: 0;
+                    width: 100%;
                     height: 100%;
-                    background: transparent;
                     overflow: hidden;
+                    background: transparent;
                 }
                 #lottie {
                     width: 100vw;
                     height: 100vh;
+                }
+                svg {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: fill;
                 }
             </style>
         </head>
         <body>
             <div id='lottie'></div>
             <script>
-                lottie.loadAnimation({
+                const animation = lottie.loadAnimation({
                     container: document.getElementById('lottie'),
                     renderer: 'svg',
                     loop: true,
                     autoplay: true,
                     path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                });
+
+                animation.addEventListener('DOMLoaded', () => {
+                    const svg = document.querySelector('svg');
+                    if (svg) {
+                        svg.setAttribute('preserveAspectRatio', 'none');
+                        console.log('✅ Forced SVG to stretch vertically');
+                    } else {
+                        console.error('❌ SVG not found');
+                    }
                 });
             </script>
         </body>
