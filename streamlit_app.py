@@ -76,7 +76,7 @@ st.markdown("""
     .block-container {
         max-width: 75%;
         margin: auto;
-        padding-top: 1rem;
+        padding-top: 0;
         padding-bottom: 2rem;
     }
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
