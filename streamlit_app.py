@@ -90,8 +90,7 @@ st.markdown("""
     input, textarea {
         font-size: 18px !important;
     }
-    .stButton button {
-            position: fixed;
+    .stButton button "Back to Welcome Page" {
             top: 1.5rem;
             left: 1.5rem;
             z-index: 10;
@@ -120,8 +119,6 @@ elif st.session_state.page == "main":
         st.session_state.page = "welcome"
         st.rerun()
         
-        
-
     # Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
