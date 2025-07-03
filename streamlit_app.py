@@ -4,15 +4,16 @@ import os
 
 # Set environment key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
-
-#Inject full-page background animation
-# Inject full-page Lottie background using iframe
-
- # Inject full-page Lottie background using iframe
 st.markdown("""
     <style>
+    html, body, .stApp {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: transparent !important;
+        overflow: hidden;
+    }
+
     .lottie-bg-container {
         position: fixed;
         top: 0;
@@ -22,9 +23,7 @@ st.markdown("""
         z-index: 0;
         opacity: 0.5;
         pointer-events: none;
-    }
-    .stApp {
-        background-color: transparent !important;
+        border: none;
     }
     </style>
 
@@ -36,12 +35,15 @@ st.markdown("""
             <style>
                 html, body {
                     margin: 0;
+                    padding: 0;
                     height: 100%;
+                    width: 100%;
+                    overflow: hidden;
                     background: transparent;
                 }
                 #lottie {
-                    width: 100%;
-                    height: 100%;
+                    width: 100vw;
+                    height: 100vh;
                 }
             </style>
         </head>
@@ -58,7 +60,7 @@ st.markdown("""
             </script>
         </body>
         </html>
-    " width="100%" height="100%" frameborder="0" style="position: fixed;"></iframe>
+    " width="100%" height="100%" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
 
 st.markdown("""
