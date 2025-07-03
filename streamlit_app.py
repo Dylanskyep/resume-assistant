@@ -123,11 +123,12 @@ elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    if st.button("Back to Welcome Page", key="back_to_welcome"):
+    st.markdown('<div class="back-button-container">', unsafe_allow_html=True)
+    if st.button("← Back to Welcome Page", key="back_to_welcome"):
         st.session_state.page = "welcome"
         st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     # Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
