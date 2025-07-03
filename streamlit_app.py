@@ -75,9 +75,6 @@ st.markdown("""
     <style>
      padding-top: 1rem !important;
     padding-bottom: 1rem !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     min-height: 100vh;
     }
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
