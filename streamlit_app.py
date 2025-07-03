@@ -123,6 +123,65 @@ if "page" not in st.session_state:
 
 # Welcome Page
 if st.session_state.page == "welcome":
+    st.markdown("""
+        <style>
+        .lottie-welcome-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        iframe.lottie-welcome {
+            width: 400px;
+            height: 400px;
+            opacity: 0.7;
+            border: none;
+        }
+        </style>
+
+        <div class="lottie-welcome-container">
+            <iframe class="lottie-welcome" srcdoc='
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+                    <style>
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            background: transparent;
+                            overflow: hidden;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100%;
+                            width: 100%;
+                        }
+                        #lottie {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div id="lottie"></div>
+                    <script>
+                        lottie.loadAnimation({
+                            container: document.getElementById("lottie"),
+                            renderer: "svg",
+                            loop: true,
+                            autoplay: true,
+                            path: "https://lottie.host/c8f76c44-71ab-41ed-b30d-5975839c1cc7/YAwYaiesCs.json"
+                        });
+                    </script>
+                </body>
+                </html>
+            '></iframe>
+        </div>
+    """, unsafe_allow_html=True)
+
     st.markdown(""" <h1 class="welcome-title">Welcome to the Resume Assistant</h1>
     """, unsafe_allow_html=True)
     st.markdown(""" <p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</p>
