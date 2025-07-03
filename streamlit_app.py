@@ -82,6 +82,7 @@ st.markdown("""
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
         z-index: 1;
         position: relative;
+        font_size: 1.2rem;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -105,8 +106,8 @@ elif st.session_state.page == "main":
     # Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
-        experience = st.text_area("Enter your experience details:", height=150, font_size=20)
-        job_title = st.text_input("Enter the job title:", font_size=20)
+        experience = st.text_area("Enter your experience details:", height=150)
+        job_title = st.text_input("Enter the job title:")
         if st.button("Generate Bullet Points"):
             if experience and job_title:
                 with st.spinner("Generating bullet points..."):
@@ -121,8 +122,8 @@ elif st.session_state.page == "main":
     # Resume Critique Tab
     with tab2:
         st.header("Generate Resume Critiques")
-        pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"], font_size=20)
-        job_focus = st.text_input("Enter the job focus (optional but helpful):", font_size=20)
+        pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
+        job_focus = st.text_input("Enter the job focus (optional but helpful):")
         if pdf_file is not None:
             if st.button("Critique Resume"):
                 with st.spinner("Generating resume critiques..."):
