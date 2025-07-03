@@ -93,7 +93,7 @@ st.markdown("""
     }
    .welcome-title {
         font-size: 150px;
-        font-weight: 800;
+        font-weight: bold;
         text-align: center;
         margin-top: 2rem;
         animation: fadeIn 1.3s ease-out forwards;
@@ -102,6 +102,8 @@ st.markdown("""
             font-size: 24px;
             font-color: #000000;
             text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
             animation: fadeIn 1.6s ease-out forwards;
     }
 
