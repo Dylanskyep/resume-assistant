@@ -202,7 +202,10 @@ elif st.session_state.page == "main":
         margin-top: 2rem;
         animation: fadeIn 1.6s ease-out forwards;
     }
-   
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
     </style>
 """, unsafe_allow_html=True)
     st.markdown('<h1 class="animated-title">Create and Review Resumes using AI</h1>', unsafe_allow_html=True)
