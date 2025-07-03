@@ -100,8 +100,9 @@ st.markdown("""
     }
     .welcome-desc {   
             font-size: 24px;
+            font-color: #000000;
             text-align: center;
-            animation: fadeIn 1.3s ease-out 0.5 forwards;
+            animation: fadeIn 1.5s ease-out 1 forwards;
     }
 
     @keyframes fadeIn {
