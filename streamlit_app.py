@@ -155,7 +155,7 @@ if st.session_state.page == "welcome":
                             overflow: hidden;
                             display: flex;
                             justify-content: center;
-                            align-items: center;
+                            align-items: flex-start;
                             height: 100%;
                             width: 100%;
                         }
