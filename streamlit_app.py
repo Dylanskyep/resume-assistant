@@ -90,6 +90,9 @@ st.markdown("""
     input, textarea {
         font-size: 18px !important;
     }
+    title welcome {
+            position: fixed;
+            font-size: 40px;}
 
 
     </style>
@@ -100,7 +103,7 @@ if "page" not in st.session_state:
 
 # Welcome Page
 if st.session_state.page == "welcome":
-    st.title("Welcome to the Resume Assistant")
+    st.title("Welcome to the Resume Assistant", key="welcome")
     st.markdown("This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!")
     if st.button("Continue to Main Page"):
         st.session_state.page = "main"
