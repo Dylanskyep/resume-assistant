@@ -96,11 +96,12 @@ st.markdown("""
         font-weight: bold;
         text-align: center;
         margin-top: 2rem;
+        margin-bottom:3rem;
         animation: fadeIn 1.3s ease-out forwards;
     }
     .welcome-desc {   
-            font-size: 24px;
-            font-color: #000000;
+            font-size: 35px;
+            font-color: #A9A9A9;
             text-align: center;
             margin-top: 1rem;
             margin-bottom: 2rem;
