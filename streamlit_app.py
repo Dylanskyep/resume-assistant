@@ -119,7 +119,7 @@ if "page" not in st.session_state:
 if st.session_state.page == "welcome":
     st.markdown(""" <h1 class="welcome-title">Welcome to the Resume Assistant</h1>
     """, unsafe_allow_html=True)
-    st.markdown(""" <h1 class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</h1>
+    st.markdown(""" <h2 class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</h2>
     """, unsafe_allow_html=True)
 
     if st.button("Continue to Main Page"):
