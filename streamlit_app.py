@@ -28,40 +28,47 @@ st.markdown("""
     }
     </style>
 
-    <iframe class="lottie-bg-container" srcdoc="
+    <iframe class="lottie-bg-container" srcdoc='
         <!DOCTYPE html>
         <html>
         <head>
-            <script src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js'></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
             <style>
                 html, body {
                     margin: 0;
                     padding: 0;
                     height: 100%;
                     width: 100%;
-                    overflow: hidden;
                     background: transparent;
+                    overflow: hidden;
                 }
                 #lottie {
                     width: 100vw;
                     height: 100vh;
+                    transform: scale(1.1);  /* Zoom in slightly */
+                    transform-origin: center;
+                }
+                #lottie > svg {
+                    width: 100% !important;
+                    height: 100% !important;
+                    object-fit: cover;  /* Crop instead of stretch */
                 }
             </style>
         </head>
         <body>
-            <div id='lottie'></div>
+            <div id="lottie"></div>
             <script>
                 lottie.loadAnimation({
-                    container: document.getElementById('lottie'),
-                    renderer: 'svg',
+                    container: document.getElementById("lottie"),
+                    renderer: "svg",
                     loop: true,
                     autoplay: true,
-                    path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                    path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
                 });
             </script>
         </body>
         </html>
-    " width="100%" height="100%" frameborder="0"></iframe>
+    ' width="100%" height="100%" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
 
 st.markdown("""
@@ -82,7 +89,7 @@ st.markdown("""
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
-#Welcome Page
+# Welcome Page
 if st.session_state.page == "welcome":
     st.title("Welcome to the Resume Assistant")
     st.markdown("Create and review resumes using AI-powered tools.")
@@ -90,7 +97,7 @@ if st.session_state.page == "welcome":
         st.session_state.page = "main"
         st.rerun()
 
-#Main App Page
+# Main App Page
 elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
@@ -111,7 +118,7 @@ elif st.session_state.page == "main":
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
 
-    #Resume Critique
+    # Resume Critique Tab
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
