@@ -200,7 +200,7 @@ elif st.session_state.page == "main":
         font-weight: 800;
         text-align: center;
         margin-top: 2rem;
-        animation: fadeIn 1.3 forwards;
+        animation: fadeIn 1.3 ease-out forwards;
     }
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(-20px); }
