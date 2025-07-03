@@ -82,7 +82,7 @@ st.markdown("""
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
         z-index: 1;
         position: relative;
-        font_size: 1.2rem;
+        font_size: 1.5rem;
     }
     </style>
 """, unsafe_allow_html=True)
