@@ -84,6 +84,10 @@ st.markdown("""
         position: relative;
         font_size: 20px;
     }
+    input, textarea {
+        font-size: 18px !important;
+    }
+
     </style>
 """, unsafe_allow_html=True)
 
