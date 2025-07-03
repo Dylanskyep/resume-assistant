@@ -102,8 +102,7 @@ st.markdown("""
         background-color: #ffffff;
         border-radius: 8px;
         padding: 0.4rem 0.8rem;
-        top: 1.5rem;
-        left: 1.5rem;
+        
 }
 
 
@@ -127,9 +126,11 @@ elif st.session_state.page == "main":
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
     st.markdown('<div class="back-button-container">', unsafe_allow_html=True)
-    if st.button("← Back to Welcome Page", key="back_to_welcome"):
-        st.session_state.page = "welcome"
-        st.rerun()
+    col1, _ = st.columns([1, 99])
+    with col1:
+        if st.button("← Back to Welcome Page"):
+            st.session_state.page = "welcome"
+            st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Bullet Points Tab
