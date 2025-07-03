@@ -90,6 +90,7 @@ st.markdown("""
     input, textarea {
         font-size: 18px !important;
     }
+            
     .back-button-container {
         position: fixed;
         top: 1.5rem;
@@ -101,6 +102,8 @@ st.markdown("""
         background-color: #ffffff;
         border-radius: 8px;
         padding: 0.4rem 0.8rem;
+        top: 1.5rem;
+        left: 1.5rem;
 }
 
 
@@ -128,7 +131,7 @@ elif st.session_state.page == "main":
         st.session_state.page = "welcome"
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
-    
+
     # Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
