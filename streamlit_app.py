@@ -149,10 +149,9 @@ if st.session_state.page == "welcome":
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
                     <style>
                         html, body {
-                            margin-bottom: 2rem;
-                            padding-top: 2rem;
+                            margin-bottom: 1rem;
+                            padding-top: 0;
                             background: transparent;
-                            overflow: hidden;
                             display: flex;
                             justify-content: center;
                             align-items: flex-start;
