@@ -90,11 +90,19 @@ st.markdown("""
     input, textarea {
         font-size: 18px !important;
     }
-    .stButton back_to_welcome {
+    .back-button-container {
         position: fixed;
+        top: 1.5rem;
         left: 1.5rem;
-        right: 1.5rem;
-        }
+        z-index: 999;
+}
+
+    .back-button-container button {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+}
+
 
     </style>
 """, unsafe_allow_html=True)
@@ -118,6 +126,7 @@ elif st.session_state.page == "main":
     if st.button("Back to Welcome Page", key="back_to_welcome"):
         st.session_state.page = "welcome"
         st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
         
     # Bullet Points Tab
     with tab1:
