@@ -8,49 +8,57 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
 #Inject full-page background animation
+# Inject full-page Lottie background using iframe
+
+ # Inject full-page Lottie background using iframe
 st.markdown("""
     <style>
-    .stApp {
-        background-color: transparent !important;
-    }
-    </style>
-
-    <div id="lottie-background" style="
+    .lottie-bg-container {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         z-index: 0;
+        opacity: 0.5;
         pointer-events: none;
-        opacity: 0.5;">
-    </div>
+    }
+    .stApp {
+        background-color: transparent !important;
+    }
+    </style>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-    <script>
-        console.log("⏳ Injecting Lottie...");
-        const container = document.getElementById('lottie-background');
-        if (!container) {
-            console.error("❌ Lottie container not found!");
-        } else {
-            console.log("✅ Found Lottie container");
-            const animation = lottie.loadAnimation({
-                container: container,
-                renderer: 'svg',
-                loop: true,
-                autoplay: true,
-                path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
-            });
-
-            animation.addEventListener('DOMLoaded', function () {
-                console.log("🎉 Lottie animation loaded!");
-            });
-
-            animation.addEventListener('error', function (e) {
-                console.error("🚨 Lottie failed to load", e);
-            });
-        }
-    </script>
+    <iframe class="lottie-bg-container" srcdoc="
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js'></script>
+            <style>
+                html, body {
+                    margin: 0;
+                    height: 100%;
+                    background: transparent;
+                }
+                #lottie {
+                    width: 100%;
+                    height: 100%;
+                }
+            </style>
+        </head>
+        <body>
+            <div id='lottie'></div>
+            <script>
+                lottie.loadAnimation({
+                    container: document.getElementById('lottie'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                });
+            </script>
+        </body>
+        </html>
+    " width="100%" height="100%" frameborder="0" style="position: fixed;"></iframe>
 """, unsafe_allow_html=True)
 
 st.markdown("""
