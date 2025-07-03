@@ -76,8 +76,8 @@ st.markdown("""
     .block-container {
         max-width: 75%;
         margin: auto;
-        padding-top: 0rem !important;
-        padding-bottom: 3rem;
+        padding-top: 1rem !important;
+        padding-bottom: 5rem;
     }
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
         z-index: 1;
