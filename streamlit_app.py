@@ -83,6 +83,7 @@ st.markdown("""
         z-index: 1;
         position: relative;
         font_size: 20px;
+        text-align: center;
     }
     title{
         position: fixed;
@@ -91,7 +92,7 @@ st.markdown("""
         font-size: 18px !important;
     }
    .welcome-title {
-        font-size: 48px;
+        font-size: 80px;
         font-weight: 800;
         text-align: center;
         margin-top: 2rem;
@@ -100,7 +101,7 @@ st.markdown("""
     .welcome-desc {   
             font-size: 24px;
             text-align: center;
-            animation: fadeIn 1.3s ease-out forwards;
+            animation: fadeIn 1.3s ease-out 0.5 forwards;
     }
 
     @keyframes fadeIn {
@@ -120,7 +121,7 @@ if "page" not in st.session_state:
 if st.session_state.page == "welcome":
     st.markdown(""" <h1 class="welcome-title">Welcome to the Resume Assistant</h1>
     """, unsafe_allow_html=True)
-    st.markdown(""" <h2 class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</h2>
+    st.markdown(""" <p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</p>
     """, unsafe_allow_html=True)
 
     if st.button("Continue to Main Page"):
