@@ -73,11 +73,12 @@ st.markdown("""
 
 st.markdown("""
     <style>
-    .block-container {
-        max-width: 75%;
-        margin: auto;
-        padding-top: 0;
-        padding-bottom: 2rem;
+     padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 100vh;
     }
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
         z-index: 1;
