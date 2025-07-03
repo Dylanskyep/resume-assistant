@@ -23,19 +23,19 @@ st.markdown("""
     }
     </style>
 
-    <iframe class="lottie-bg-container" srcdoc="
+    <iframe class="lottie-bg-container" srcdoc='
         <!DOCTYPE html>
         <html>
         <head>
-            <script src='https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js'></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
             <style>
                 html, body {
                     margin: 0;
                     padding: 0;
-                    width: 100%;
                     height: 100%;
-                    overflow: hidden;
+                    width: 100%;
                     background: transparent;
+                    overflow: hidden;
                 }
                 #lottie {
                     width: 100vw;
@@ -44,34 +44,33 @@ st.markdown("""
                 svg {
                     width: 100% !important;
                     height: 100% !important;
-                    object-fit: fill;
                 }
             </style>
         </head>
         <body>
-            <div id='lottie'></div>
+            <div id="lottie"></div>
             <script>
                 const animation = lottie.loadAnimation({
-                    container: document.getElementById('lottie'),
-                    renderer: 'svg',
+                    container: document.getElementById("lottie"),
+                    renderer: "svg",
                     loop: true,
                     autoplay: true,
-                    path: 'https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json'
+                    path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
                 });
 
-                animation.addEventListener('DOMLoaded', () => {
-                    const svg = document.querySelector('svg');
+                animation.addEventListener("DOMLoaded", function () {
+                    const svg = document.querySelector("svg");
                     if (svg) {
-                        svg.setAttribute('preserveAspectRatio', 'none');
-                        console.log('✅ Forced SVG to stretch vertically');
+                        svg.setAttribute("preserveAspectRatio", "none");
+                        console.log("✅ SVG stretched");
                     } else {
-                        console.error('❌ SVG not found');
+                        console.error("❌ SVG not found");
                     }
                 });
             </script>
         </body>
         </html>
-    " width="100%" height="100%" frameborder="0"></iframe>
+    ' width="100%" height="100%" frameborder="0"></iframe>
 """, unsafe_allow_html=True)
 
 st.markdown("""
