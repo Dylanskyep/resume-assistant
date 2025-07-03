@@ -101,6 +101,7 @@ st.markdown("""
             font-size: 24px;
             text-align: center;
             animation: fadeIn 1.3s ease-out forwards;
+    }
 
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(-20px); }
