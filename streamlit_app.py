@@ -102,7 +102,7 @@ st.markdown("""
             font-size: 24px;
             font-color: #000000;
             text-align: center;
-            animation: fadeIn 1.5s ease-out 2 forwards;
+            animation: fadeIn 1.6s ease-out forwards;
     }
 
     @keyframes fadeIn {
