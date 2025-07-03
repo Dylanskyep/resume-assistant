@@ -125,13 +125,20 @@ elif st.session_state.page == "main":
     st.title("Create and Review Resumes using AI", anchor="main")
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-    st.markdown('<div class="back-button-container">', unsafe_allow_html=True)
-    col1, _ = st.columns([1, 99])
-    with col1:
-        if st.button("← Back to Welcome Page"):
-            st.session_state.page = "welcome"
-            st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+# Render a raw HTML button pinned top-left
+st.markdown("""
+    <form action="" method="post">
+        <div class="back-button-container">
+            <button name="back" type="submit">← Back to Welcome Page</button>
+        </div>
+    </form>
+""", unsafe_allow_html=True)
+
+# Respond to the raw button click
+if st.session_state.get("page") == "main" and st.experimental_get_query_params().get("back") is not None:
+    st.session_state.page = "welcome"
+    st.rerun()
+
 
     # Bullet Points Tab
     with tab1:
