@@ -45,13 +45,13 @@ st.markdown("""
                 #lottie {
                     width: 100vw;
                     height: 100vh;
-                    transform: scale(1.1);  /* Zoom in slightly */
+                    transform: scale(1.5); 
                     transform-origin: center;
                 }
                 #lottie > svg {
                     width: 100% !important;
                     height: 100% !important;
-                    object-fit: cover;  /* Crop instead of stretch */
+                    object-fit: cover;  
                 }
             </style>
         </head>
