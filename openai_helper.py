@@ -85,6 +85,8 @@ def critique_resume(pdf_file, job_focus):
                 Suggestions
                 - ...
                 - ...
+
+                Make sure each section is adequately separated by each section with enough spacing to differentiate them.
                 """}
             ],
             "max_tokens": 1000,
