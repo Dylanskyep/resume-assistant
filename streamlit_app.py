@@ -95,8 +95,13 @@ st.markdown("""
         font-weight: 800;
         text-align: center;
         margin-top: 2rem;
-        animation: fadeIn 1.2s ease-out forwards;
-    }   
+        animation: fadeIn 1.3s ease-out forwards;
+    }
+    .welcome-desc {   
+            font-size: 24px;
+            font-weight: 400;
+            text-align: center;
+            animation: fadeIn 1.3s ease-out forwards;
 
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(-20px); }
@@ -115,8 +120,9 @@ if "page" not in st.session_state:
 if st.session_state.page == "welcome":
     st.markdown(""" <h1 class="welcome-title">Welcome to the Resume Assistant</h1>
     """, unsafe_allow_html=True)
+    st.markdown(""" <h1 class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!</h1>
+    """, unsafe_allow_html=True)
 
-    st.markdown("This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents and your chances of landing your dream job!")
     if st.button("Continue to Main Page"):
         st.session_state.page = "main"
         st.rerun()
