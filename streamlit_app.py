@@ -92,7 +92,7 @@ st.markdown("""
         font-size: 18px !important;
     }
    .welcome-title {
-        font-size: 80px;
+        font-size: 150px;
         font-weight: 800;
         text-align: center;
         margin-top: 2rem;
