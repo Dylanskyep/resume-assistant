@@ -187,7 +187,7 @@ if st.session_state.page == "welcome":
                 Click the button below to navigate to the main page.</p>
     """, unsafe_allow_html=True)
 
-    if st.button("Continue to Main Page"):
+    if st.button("--->"):
         st.session_state.page = "main"
         st.rerun()
 
