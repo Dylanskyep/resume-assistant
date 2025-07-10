@@ -7,7 +7,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 st.markdown("""
     <style>
-    html, body, .stApp {
+    html, body, .stApp, .main, .block-container {
         margin: 0;
         padding: 0;
         height: 100%;
