@@ -2,75 +2,75 @@ from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
 
-# Set environment key
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-st.markdown("""
-    <style>
-    html, body, .stApp, .block-container {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background-color: transparent !important;
-        overflow: hidden;
-    }
+# only disable scrolling on welcome page
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
 
-    .lottie-bg-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 0;
-        opacity: 0.5;
-        pointer-events: none;
-        border: none;
-    }
-    </style>
+if st.session_state.page == "welcome":
+    st.markdown("""
+        <style>
+        html, body, .stApp, .main, .block-container {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent !important;
+        }
 
-    <iframe class="lottie-bg-container" srcdoc='
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-            <style>
-                html, body {
-                    margin: 0;
-                    padding: 0;
-                    height: 100%;
-                    width: 100%;
-                    background: transparent;
-                    overflow: hidden;
-                }
-                #lottie {
-                    width: 100vw;
-                    height: 100vh;
-                    transform: scale(1.5); 
-                    transform-origin: center;
-                }
-                #lottie > svg {
-                    width: 100% !important;
-                    height: 100% !important;
-                    object-fit: cover;  
-                }
-            </style>
-        </head>
-        <body>
-            <div id="lottie"></div>
-            <script>
-                lottie.loadAnimation({
-                    container: document.getElementById("lottie"),
-                    renderer: "svg",
-                    loop: true,
-                    autoplay: true,
-                    path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
-                });
-            </script>
-        </body>
-        </html>
-    ' width="100%" height="100%" frameborder="0"></iframe>
-""", unsafe_allow_html=True)
+        .lottie-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+            border: none;
+        }
+        </style>
 
+        <iframe class="lottie-bg-container" srcdoc='
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+                <style>
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                        height: 100%;
+                        width: 100%;
+                        background: transparent;
+                        overflow: hidden;
+                    }
+                    #lottie {
+                        width: 100vw;
+                        height: 100vh;
+                        transform: scale(1.5); 
+                        transform-origin: center;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="lottie"></div>
+                <script>
+                    lottie.loadAnimation({
+                        container: document.getElementById("lottie"),
+                        renderer: "svg",
+                        loop: true,
+                        autoplay: true,
+                        path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
+                    });
+                </script>
+            </body>
+            </html>
+        ' width="100%" height="100%" frameborder="0"></iframe>
+    """, unsafe_allow_html=True)
+
+# Common styling
 st.markdown("""
     <style>
     .block-container {
@@ -85,41 +85,31 @@ st.markdown("""
         font_size: 20px;
         text-align: center;
     }
-    title{
-        position: fixed;
-    }
     input, textarea {
         font-size: 18px !important;
     }
-   .welcome-title {
+    .welcome-title {
         font-size: 150px;
         font-weight: bold;
         text-align: center;
         margin-top: 2rem;
-        margin-bottom:3rem;
+        margin-bottom: 3rem;
         animation: fadeIn 1.3s ease-out forwards;
     }
     .welcome-desc {   
-            font-size: 35px;
-            font-color: #A9A9A9;
-            text-align: center;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-            animation: fadeIn 1.6s ease-out forwards;
+        font-size: 35px;
+        color: #A9A9A9;
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        animation: fadeIn 1.6s ease-out forwards;
     }
-
     @keyframes fadeIn {
         0% { opacity: 0; transform: translateY(-20px); }
         100% { opacity: 1; transform: translateY(0); }
     }
-
-
-
     </style>
 """, unsafe_allow_html=True)
-
-if "page" not in st.session_state:
-    st.session_state.page = "welcome"
 
 # Welcome Page
 if st.session_state.page == "welcome":
@@ -132,7 +122,6 @@ if st.session_state.page == "welcome":
             margin-top: 2rem;
             margin-bottom: 2rem;
         }
-
         iframe.lottie-welcome {
             width: 400px;
             height: 400px;
@@ -150,15 +139,15 @@ if st.session_state.page == "welcome":
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
                     <style>
                         html, body {
-                            margin-bottom: 1rem;
-                            padding-top: 0;
-                            background: transparent;
-                            display: flex;
-                            overflow: hidden;
-                            justify-content: center;
-                            align-items: flex-start;
+                            margin: 0;
+                            padding: 0;
                             height: 100vh;
                             width: 100vw;
+                            background: transparent;
+                            overflow: hidden;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
                         }
                         #lottie {
                             width: 100%;
@@ -183,38 +172,36 @@ if st.session_state.page == "welcome":
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(""" <h1 class="welcome-title">Welcome to the Resume Assistant</h1>
-    """, unsafe_allow_html=True)
-    st.markdown(""" <p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents! 
-                Click the button below to navigate to the main page.</p>
-    """, unsafe_allow_html=True)
+    st.markdown("""<h1 class="welcome-title">Welcome to the Resume Assistant</h1>""", unsafe_allow_html=True)
+    st.markdown("""<p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents! 
+                Click the button below to navigate to the main page.</p>""", unsafe_allow_html=True)
 
     if st.button("--->"):
         st.session_state.page = "main"
         st.rerun()
 
-# Main App Page
+# Main Page
 elif st.session_state.page == "main":
     st.markdown("""
-    <style>
-    .animated-title {
-        font-size: 40px;
-        font-weight: 800;
-        text-align: center;
-        margin-top: 2rem;
-        animation: fadeInDown 1.6s ease-out forwards;
-    }
-    @keyframes fadeInDown {
-        0% { opacity: 0; transform: translateY(-20px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
-    </style>
-""", unsafe_allow_html=True)
+        <style>
+        .animated-title {
+            font-size: 40px;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 2rem;
+            animation: fadeInDown 1.6s ease-out forwards;
+        }
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     st.markdown('<h1 class="animated-title">Create and Review Resumes using AI</h1>', unsafe_allow_html=True)
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-
-    # Bullet Points Tab
+# Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -230,7 +217,7 @@ elif st.session_state.page == "main":
             else:
                 st.write("Please enter both experience details and job title to generate bullet points.")
 
-    # Resume Critique Tab
+# Resume Critique Tab
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
@@ -241,13 +228,13 @@ elif st.session_state.page == "main":
                     critique = critique_resume(pdf_file, job_focus)
                     if critique:
                         st.subheader("Results")
-                        for line in critique:
-                            if line.strip():
-                                if line.strip().startswith(("-", "•", "*")):
-                                    st.write(line.strip())
-                                else:
-                                    st.markdown(f"**{line.strip()}**")
-                        st.download_button("Download Critiques", "\n".join(critique), file_name="critiques.txt")
+                        for title, content, feedback in critique:
+                            st.markdown(f"{title}")
+                            with st.expander("Resume Section"):
+                                st.code(content)
+                            with st.expander("Critique"):
+                                st.markdown(feedback, unsafe_allow_html=True)
+                        # PDF download logic would go here if implemented
                     else:
                         st.write("Please check the PDF file format or job focus to ensure they are valid.")
         else:
