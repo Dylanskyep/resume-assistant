@@ -138,6 +138,7 @@ if st.session_state.page == "welcome":
             height: 400px;
             opacity: 0.7;
             border: none;
+            overflow: hidden;
         }
         </style>
 
@@ -153,10 +154,11 @@ if st.session_state.page == "welcome":
                             padding-top: 0;
                             background: transparent;
                             display: flex;
+                            overflow: hidden;
                             justify-content: center;
                             align-items: flex-start;
-                            height: 100%;
-                            width: 100%;
+                            height: 100vh;
+                            width: 100vw;
                         }
                         #lottie {
                             width: 100%;
