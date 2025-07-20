@@ -154,8 +154,10 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 matched_word = match[0]
                 for w in words:
                     if w[4].lower() == matched_word:
-                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 700)  
-                        pix = page.get_pixmap(clip=rect, dpi=150)
+                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 400)  
+                        zoom = 0.7
+                        mat = fitz.Matrix(zoom, zoom)
+                        pix = page.get_pixmap(matrix=mat, clip=rect)
                         unique_name = str(uuid.uuid4())[:8]
                         image_path = f"/tmp/{section_title.replace(' ', '_')}_{unique_name}.png"
                         pix.save(image_path)
