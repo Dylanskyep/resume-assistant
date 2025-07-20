@@ -123,24 +123,37 @@ def critique_section(section_title, section_content, job_focus):
         return critique_text.strip()
 
 def extract_section_image_from_pdf(pdf_file, section_title):
-    pdf_file.seek(0)  
+    if not section_title or not isinstance(section_title, str):
+        print(f"[ERROR] Invalid section_title: {section_title}")
+        return None
+
+    section_title = section_title.strip()
+    if not section_title:
+        print("[ERROR] Section title is empty after stripping.")
+        return None
+
+    pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
         tmp_pdf.flush()
 
     doc = fitz.open(tmp_pdf.name)
-    section_img_paths = []
 
-    for page in doc:
-        text_instances = page.search_for(str(section_title), hit_max=1)
-        if text_instances:
-            rect = text_instances[0]
-            rect.y1 += 200  
-            pix = page.get_pixmap(clip=rect, dpi=150)
-            image_path = f"/tmp/section_{section_title}.png"
-            pix.save(image_path)
-            section_img_paths.append(image_path)
-            break 
+    for page_number, page in enumerate(doc):
+        try:
+            text_instances = page.search_for(section_title, hit_max=1)
+            if text_instances:
+                rect = text_instances[0]
+                rect.y1 += 200  
+                pix = page.get_pixmap(clip=rect, dpi=150)
+                image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
+                pix.save(image_path)
+                doc.close()
+                return image_path
+        except Exception as e:
+            print(f"[ERROR] Failed to search or extract on page {page_number}: {e}")
 
     doc.close()
-    return section_img_paths[0] if section_img_paths else None
+    print(f"[INFO] Could not find section title '{section_title}' in any page.")
+    return None
+
