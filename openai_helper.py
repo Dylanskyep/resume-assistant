@@ -123,12 +123,15 @@ def critique_section(section_title, section_content, job_focus):
         return critique_text.strip()
 
 def extract_section_image_from_pdf(pdf_file, section_title):
+    import difflib
+    import uuid
+
     if not section_title or not isinstance(section_title, str):
         print(f"[ERROR] Invalid section_title: {section_title}")
         return None
 
-    section_title = section_title.strip()
-    if not section_title:
+    section_title_clean = section_title.strip().lower()
+    if not section_title_clean:
         print("[ERROR] Section title is empty after stripping.")
         return None
 
@@ -141,19 +144,28 @@ def extract_section_image_from_pdf(pdf_file, section_title):
 
     for page_number, page in enumerate(doc):
         try:
-            text_instances = page.search_for(section_title, hit_max=1)
-            if text_instances:
-                rect = text_instances[0]
-                rect.y1 += 200  
-                pix = page.get_pixmap(clip=rect, dpi=150)
-                image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
-                pix.save(image_path)
-                doc.close()
-                return image_path
+            # Get all words on the page (position-aware)
+            words = page.get_text("words")  # returns list of (x0, y0, x1, y1, word, block_no, line_no, word_no)
+
+            # Find closest match to section title (case-insensitive)
+            titles_on_page = [w[4] for w in words]
+            match = difflib.get_close_matches(section_title_clean, [w.lower() for w in titles_on_page], n=1, cutoff=0.8)
+
+            if match:
+                matched_word = match[0]
+                for w in words:
+                    if w[4].lower() == matched_word:
+                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 300)  # capture area under the title
+                        pix = page.get_pixmap(clip=rect, dpi=150)
+                        unique_name = str(uuid.uuid4())[:8]
+                        image_path = f"/tmp/{section_title.replace(' ', '_')}_{unique_name}.png"
+                        pix.save(image_path)
+                        doc.close()
+                        return image_path
+
         except Exception as e:
-            print(f"[ERROR] Failed to search or extract on page {page_number}: {e}")
+            print(f"[ERROR] Failed to process page {page_number}: {e}")
 
     doc.close()
     print(f"[INFO] Could not find section title '{section_title}' in any page.")
     return None
-
