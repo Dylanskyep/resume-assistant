@@ -123,48 +123,65 @@ def critique_section(section_title, section_content, job_focus):
         critique_text = result["choices"][0]["message"]["content"]
         return critique_text.strip()
 
+import fitz  # PyMuPDF
+import tempfile
+
+# Define a dictionary of section title aliases for better detection
+SECTION_ALIASES = {
+    "Education": ["Education", "Academic Background"],
+    "Experience": ["Experience", "Work Experience", "Professional Experience"],
+    "Projects": ["Projects", "Technical Projects", "Software Projects"],
+    "Technical Skills": ["Technical Skills", "Skills", "Technologies"],
+    "Leadership": ["Leadership", "Leadership Experience"],
+    "Awards": ["Awards", "Honors", "Achievements"],
+    "Activities": ["Activities", "Extracurricular Activities"]
+}
+
 def extract_section_image_from_pdf(pdf_file, section_title):
     if not section_title or not isinstance(section_title, str):
         return None
     section_title = section_title.strip()
 
+    # Create temporary PDF file
     pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
         tmp_pdf_path = tmp_pdf.name
 
     doc = fitz.open(tmp_pdf_path)
-    next_titles = [t for t in SECTION_ALIASES if t != section_title]
+
+    # Flatten all section aliases to lowercase
+    all_titles = [a.lower() for aliases in SECTION_ALIASES.values() for a in aliases]
+    current_aliases = SECTION_ALIASES.get(section_title, [section_title])
+    normalized_title = section_title.lower()
 
     for page_number, page in enumerate(doc):
-        blocks = page.get_text("blocks")  # list of (x0, y0, x1, y1, "text", block_no, block_type)
+        blocks = page.get_text("blocks")  # Each block: (x0, y0, x1, y1, "text", block_no, block_type)
+
         start_idx = None
         for i, block in enumerate(blocks):
-            if section_title.lower() in block[4].strip().lower():
+            if any(alias.lower() in block[4].strip().lower() for alias in current_aliases):
                 start_idx = i
                 break
         if start_idx is None:
-            continue  
+            continue  # Section title not found on this page
 
-        # Find ending block (next section title)
+        # Search for the next title after start_idx
         end_idx = len(blocks)
-        for i in range(start_idx + 1, len(blocks)):
-            for alt in next_titles:
-                if alt.lower() in blocks[i][4].lower():
-                    end_idx = i
-                    break
-            if end_idx != len(blocks):
+        for j in range(start_idx + 1, len(blocks)):
+            if any(alt in blocks[j][4].lower() for alt in all_titles if alt != normalized_title):
+                end_idx = j
                 break
 
-        # Compute bounding box from start to end
+        # Get bounding box from all blocks between start_idx and end_idx
         section_blocks = blocks[start_idx:end_idx]
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks) + 100
+        y1 = max(b[3] for b in section_blocks)
         rect = fitz.Rect(x0, y0, x1, y1)
 
-        pix = page.get_pixmap(clip=rect, dpi=200)  
+        pix = page.get_pixmap(clip=rect, dpi=160)
         image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
         pix.save(image_path)
         doc.close()
