@@ -4,16 +4,17 @@ import tempfile
 import fitz
 import requests
 from fpdf import FPDF
+from pathlib import Path
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 SECTION_ALIASES = {
     "Summary": ["Summary", "Professional Summary", "Objective"],
-    "Education": ["Education", "Academic Background"],
+    "Education": ["Education", "Academic Background", "Academics"],
     "Technical Skills": ["Technical Skills", "Skills", "Tech Stack", "Technical"],
     "Experience": ["Experience", "Work History", "Professional Experience"],
     "Projects": ["Projects", "Technical Projects", "Personal Projects"],
-    "Involvement": ["Involvement", "Leadership", "Extracurriculars", "Activities", "Extracurricular Activities"],
+    "Involvement": ["Involvement", "Leadership", "Extracurriculars", "Activities", "Extracurricular Activities", "Extracurricular Involvement"],
 }
 
 def normalize_section_name(title):
@@ -123,50 +124,52 @@ def critique_section(section_title, section_content, job_focus):
         return critique_text.strip()
 
 def extract_section_image_from_pdf(pdf_file, section_title):
-    import difflib
-    import uuid
-
     if not section_title or not isinstance(section_title, str):
-        print(f"[ERROR] Invalid section_title: {section_title}")
         return None
-
-    section_title_clean = section_title.strip().lower()
-    if not section_title_clean:
-        print("[ERROR] Section title is empty after stripping.")
-        return None
+    section_title = section_title.strip()
 
     pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
-        tmp_pdf.flush()
+        tmp_pdf_path = tmp_pdf.name
 
-    doc = fitz.open(tmp_pdf.name)
+    doc = fitz.open(tmp_pdf_path)
+    next_titles = [t for t in SECTION_ALIASES if t != section_title]
 
     for page_number, page in enumerate(doc):
-        try:
-            words = page.get_text("words")  
+        blocks = page.get_text("blocks")  # list of (x0, y0, x1, y1, "text", block_no, block_type)
+        start_idx = None
+        for i, block in enumerate(blocks):
+            if section_title.lower() in block[4].strip().lower():
+                start_idx = i
+                break
+        if start_idx is None:
+            continue  
 
-            # Find closest match to section title (case-insensitive)
-            titles_on_page = [w[4] for w in words]
-            match = difflib.get_close_matches(section_title_clean, [w.lower() for w in titles_on_page], n=1, cutoff=0.8)
+        # Find ending block (next section title)
+        end_idx = len(blocks)
+        for i in range(start_idx + 1, len(blocks)):
+            for alt in next_titles:
+                if alt.lower() in blocks[i][4].lower():
+                    end_idx = i
+                    break
+            if end_idx != len(blocks):
+                break
 
-            if match:
-                matched_word = match[0]
-                for w in words:
-                    if w[4].lower() == matched_word:
-                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 400)  
-                        zoom = 1.0
-                        mat = fitz.Matrix(zoom, zoom)
-                        pix = page.get_pixmap(matrix=mat, clip=rect)
-                        unique_name = str(uuid.uuid4())[:8]
-                        image_path = f"/tmp/{section_title.replace(' ', '_')}_{unique_name}.png"
-                        pix.save(image_path)
-                        doc.close()
-                        return image_path
+        # Compute bounding box from start to end
+        section_blocks = blocks[start_idx:end_idx]
+        x0 = min(b[0] for b in section_blocks)
+        y0 = min(b[1] for b in section_blocks)
+        x1 = max(b[2] for b in section_blocks)
+        y1 = max(b[3] for b in section_blocks)
+        rect = fitz.Rect(x0, y0, x1, y1)
 
-        except Exception as e:
-            print(f"[ERROR] Failed to process page {page_number}: {e}")
+        # Render as image
+        pix = page.get_pixmap(clip=rect, dpi=200)  
+        image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
+        pix.save(image_path)
+        doc.close()
+        return image_path
 
     doc.close()
-    print(f"[INFO] Could not find section title '{section_title}' in any page.")
     return None
