@@ -54,7 +54,7 @@ def critique_resume(pdf_file, job_focus):
             text += page.get_text()
         doc.close()
 
-        chunks = re.split(r'\n(?=\s*(Education|Experience|Skills|Projects|Certifications|Summary|Objective)\s*:?)', text, flags=re.IGNORECASE)
+        chunks = re.split(r'\n(?=\s*(Education|Experience|Skills|Projects|Certifications|Summary|Objective|Extracurricular Activities|Technical Skills)\s*:?)', text, flags=re.IGNORECASE)
         paired_sections = []
 
         for i in range(1, len(chunks), 2):
@@ -121,6 +121,6 @@ def critique_section(section_title, section_content, job_focus):
             raise ValueError("Groq API response missing 'choices' key")
 
         critique_text = result["choices"][0]["message"]["content"]
-        return critique_text.strip().split('\n')
+        return critique_text.strip()
 
  

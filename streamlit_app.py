@@ -1,6 +1,8 @@
 from openai_helper import generate_bullets, critique_resume
 import streamlit as st
 import os
+import fitz
+import tempfile
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -231,7 +233,16 @@ elif st.session_state.page == "main":
                         for title, content, feedback in critique:
                             st.markdown(f"{title}")
                             with st.expander("Resume Section"):
-                                st.code(content)
+                                with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+                                    tmp_pdf.write(pdf_file.read())
+                                    doc = fitz.open(tmp_pdf.name)
+                                    for i, page in enumerate(doc):
+                                        image = page.get_pixmap(dpi=150)
+                                        img_path = f"/tmp/resume_page_{i}.png"
+                                        image.save(img_path)
+                                        st.image(img_path, caption=f"Page {i+1}", use_column_width=True)
+                                    doc.close()
+
                             with st.expander("Critique"):
                                 st.markdown(feedback, unsafe_allow_html=True)
                         # PDF download logic would go here if implemented
