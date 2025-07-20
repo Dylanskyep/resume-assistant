@@ -233,19 +233,21 @@ elif st.session_state.page == "main":
                         for title, content, feedback in critique:
                             st.markdown(f"{title}")
                             with st.expander("Resume Section"):
+                                pdf_file.seek(0)
                                 with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
                                     tmp_pdf.write(pdf_file.read())
-                                    doc = fitz.open(tmp_pdf.name)
-                                    for i, page in enumerate(doc):
-                                        image = page.get_pixmap(dpi=150)
-                                        img_path = f"/tmp/resume_page_{i}.png"
-                                        image.save(img_path)
-                                        st.image(img_path, caption=f"Page {i+1}", use_column_width=True)
-                                    doc.close()
+                                    tmp_pdf.flush()
+                                doc = fitz.open(tmp_pdf.name)
+                                for i, page in enumerate(doc):
+                                    image = page.get_pixmap(dpi=150)
+                                    img_path = f"/tmp/resume_page_{i}.png"
+                                    image.save(img_path)
+                                    st.image(img_path, caption=f"Page {i+1}", use_column_width=True)
+                                doc.close()
 
                             with st.expander("Critique"):
                                 st.markdown(feedback, unsafe_allow_html=True)
-                        # PDF download logic would go here if implemented
+                        # PDF download logic 
                     else:
                         st.write("Please check the PDF file format or job focus to ensure they are valid.")
         else:
