@@ -10,10 +10,10 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 SECTION_ALIASES = {
     "Summary": ["Summary", "Professional Summary", "Objective"],
     "Education": ["Education", "Academic Background"],
-    "Technical Skills": ["Technical Skills", "Skills", "Tech Stack"],
+    "Technical Skills": ["Technical Skills", "Skills", "Tech Stack", "Technical"],
     "Experience": ["Experience", "Work History", "Professional Experience"],
     "Projects": ["Projects", "Technical Projects", "Personal Projects"],
-    "Involvement": ["Involvement", "Leadership", "Extracurriculars", "Activities"]
+    "Involvement": ["Involvement", "Leadership", "Extracurriculars", "Activities", "Extracurricular Activities"],
 }
 
 def normalize_section_name(title):
@@ -144,8 +144,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
 
     for page_number, page in enumerate(doc):
         try:
-            # Get all words on the page (position-aware)
-            words = page.get_text("words")  # returns list of (x0, y0, x1, y1, word, block_no, line_no, word_no)
+            words = page.get_text("words")  
 
             # Find closest match to section title (case-insensitive)
             titles_on_page = [w[4] for w in words]
@@ -155,7 +154,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 matched_word = match[0]
                 for w in words:
                     if w[4].lower() == matched_word:
-                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 300)  # capture area under the title
+                        rect = fitz.Rect(w[0], w[1], w[2], w[3] + 700)  
                         pix = page.get_pixmap(clip=rect, dpi=150)
                         unique_name = str(uuid.uuid4())[:8]
                         image_path = f"/tmp/{section_title.replace(' ', '_')}_{unique_name}.png"
