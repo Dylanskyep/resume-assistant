@@ -1,4 +1,4 @@
-from openai_helper import generate_bullets, critique_resume
+from openai_helper import generate_bullets, critique_resume, extract_section_image_from_pdf
 import streamlit as st
 import os
 import fitz
@@ -178,7 +178,7 @@ if st.session_state.page == "welcome":
     st.markdown("""<p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents! 
                 Click the button below to navigate to the main page.</p>""", unsafe_allow_html=True)
 
-    if st.button("--->"):
+    if st.button("→"):
         st.session_state.page = "main"
         st.rerun()
 
@@ -230,25 +230,23 @@ elif st.session_state.page == "main":
                     critique = critique_resume(pdf_file, job_focus)
                     if critique:
                         st.subheader("Results")
-                        for title, content, feedback in critique:
-                            st.markdown(f"{title}")
-                            with st.expander("Resume Section"):
-                                pdf_file.seek(0)
-                                with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
-                                    tmp_pdf.write(pdf_file.read())
-                                    tmp_pdf.flush()
-                                doc = fitz.open(tmp_pdf.name)
-                                for i, page in enumerate(doc):
-                                    image = page.get_pixmap(dpi=150)
-                                    img_path = f"/tmp/resume_page_{i}.png"
-                                    image.save(img_path)
-                                    st.image(img_path, caption=f"Page {i+1}", use_column_width=True)
-                                doc.close()
+                        for title, content, critique in sections:
+                            st.markdown(f"## {title}")
+                            
+                            col1, col2 = st.columns([1, 1])
+                            with col1:
+                                st.subheader("Resume Section Image")
+                                img_path = extract_section_image_from_pdf(pdf_file, title)
+                                if img_path:
+                                    st.image(img_path, caption=title, use_container_width=True)
+                                else:
+                                    st.info("Could not find section image in PDF.")
 
-                            with st.expander("Critique"):
-                                st.markdown(feedback, unsafe_allow_html=True)
-                        # PDF download logic 
-                    else:
-                        st.write("Please check the PDF file format or job focus to ensure they are valid.")
+                            with col2:
+                                st.subheader("Critique")
+                                st.markdown(critique, unsafe_allow_html=True)
+                                    # PDF download logic 
         else:
             st.write("Please upload a PDF file of your resume before clicking the button.")
+
+        

@@ -1,10 +1,26 @@
 import os
-import requests
-import fitz
-from fpdf import FPDF
 import re
+import tempfile
+import fitz
+import requests
+from fpdf import FPDF
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+SECTION_ALIASES = {
+    "Summary": ["Summary", "Professional Summary", "Objective"],
+    "Education": ["Education", "Academic Background"],
+    "Technical Skills": ["Technical Skills", "Skills", "Tech Stack"],
+    "Experience": ["Experience", "Work History", "Professional Experience"],
+    "Projects": ["Projects", "Technical Projects", "Personal Projects"],
+    "Involvement": ["Involvement", "Leadership", "Extracurriculars", "Activities"]
+}
+
+def normalize_section_name(title):
+    for key, aliases in SECTION_ALIASES.items():
+        if title.strip().lower() in [a.lower() for a in aliases]:
+            return key
+    return title.strip().title()
 
 def generate_bullets(experience, job_title):
     url = "https://api.groq.com/openai/v1/chat/completions"
@@ -15,58 +31,41 @@ def generate_bullets(experience, job_title):
     data = {
         "model": "llama3-70b-8192",
         "messages": [
-            {"role": "system", "content": "You are a helpful and educated resume reviewer."},
+            {"role": "system", "content": "You are a professional resume writer."},
             {"role": "user", "content": f"""
-            You are a professional resume writer.
-            Generate 3-5 bullet points for a resume based on the following experience and job title using the SMART framework (Specific, Measurable, Achievable, Relevant, and Time-bound). 
-            Each bullet point should describe a concrete impact or achievement from the experience below, tailored to the provided job title.
-            Use action verbs, quantify results where possible, and focus on accomplishments.
-            Experience: {experience}
-            Job Title: {job_title}
-            Bullet Points:
-            """}
+Generate 3–5 resume bullet points using the SMART framework for:
+Experience: {experience}
+Job Title: {job_title}
+"""}
         ],
         "max_tokens": 300,
         "temperature": 0.7
     }
 
     response = requests.post(url, headers=headers, json=data)
-    
-    try:
-        result = response.json()
-    except Exception as e:
-        print("Failed to parse JSON:", e)
-        print("Raw response:", response.text)
-        raise
-
-    if "choices" not in result:
-        print("Unexpected response structure:", result)
-        raise ValueError("Groq API response missing 'choices' key")
-
-    bullet_text = result["choices"][0]["message"]["content"]
-    return bullet_text.strip().split('\n')
+    result = response.json()
+    return result["choices"][0]["message"]["content"].strip().split('\n')
 
 def critique_resume(pdf_file, job_focus):
-    try:
-        doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
-        text = ""
-        for page in doc:
-            text += page.get_text()
-        doc.close()
+    pdf_file.seek(0)
+    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    text = ""
+    for page in doc:
+        text += page.get_text()
+    doc.close()
 
-        chunks = re.split(r'\n(?=\s*(Education|Experience|Skills|Projects|Certifications|Summary|Objective|Extracurricular Activities|Technical Skills)\s*:?)', text, flags=re.IGNORECASE)
-        paired_sections = []
+    # Dynamic section splitting
+    all_aliases = [a for aliases in SECTION_ALIASES.values() for a in aliases]
+    section_regex = r'\n(?=\s*(' + '|'.join(re.escape(a) for a in all_aliases) + r')\s*:?)'
+    chunks = re.split(section_regex, text, flags=re.IGNORECASE)
 
-        for i in range(1, len(chunks), 2):
-            section_title = chunks[i].strip().title()
-            section_content = chunks[i+1].strip()
-            full_text = f"{section_title}\n{section_content}"
-
-            critique = critique_section(section_title, section_content, job_focus)
-            paired_sections.append((section_title, section_content, critique))
-    except Exception as e:
-        print(f"Error reading resume PDF file: {e}")
-        return []
+    paired_sections = []
+    for i in range(1, len(chunks), 2):
+        raw_title = chunks[i]
+        section_title = normalize_section_name(raw_title)
+        section_content = chunks[i + 1].strip()
+        critique = critique_section(section_title, section_content, job_focus)
+        paired_sections.append((section_title, section_content, critique))
 
     return paired_sections
 
@@ -123,4 +122,25 @@ def critique_section(section_title, section_content, job_focus):
         critique_text = result["choices"][0]["message"]["content"]
         return critique_text.strip()
 
- 
+def extract_section_image_from_pdf(pdf_file, section_title):
+    pdf_file.seek(0)  
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+        tmp_pdf.write(pdf_file.read())
+        tmp_pdf.flush()
+
+    doc = fitz.open(tmp_pdf.name)
+    section_img_paths = []
+
+    for page in doc:
+        text_instances = page.search_for(section_title, hit_max=1)
+        if text_instances:
+            rect = text_instances[0]
+            rect.y1 += 200  
+            pix = page.get_pixmap(clip=rect, dpi=150)
+            image_path = f"/tmp/section_{section_title}.png"
+            pix.save(image_path)
+            section_img_paths.append(image_path)
+            break 
+
+    doc.close()
+    return section_img_paths[0] if section_img_paths else None
