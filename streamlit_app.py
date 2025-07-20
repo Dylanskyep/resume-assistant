@@ -230,7 +230,7 @@ elif st.session_state.page == "main":
                     critique = critique_resume(pdf_file, job_focus)
                     if critique:
                         st.subheader("Results")
-                        for title, content, critique in sections:
+                        for title, content, critique in critique:
                             st.markdown(f"## {title}")
                             
                             col1, col2 = st.columns([1, 1])
