@@ -123,53 +123,39 @@ def critique_section(section_title, section_content, job_focus):
         critique_text = result["choices"][0]["message"]["content"]
         return critique_text.strip()
 
-def extract_section_image_from_pdf(pdf_file, section_title):
+def extract_section_image_from_pdf(pdf_file, section_title, section_height=500, scale_factor=1.0):
+    import fitz
+    import tempfile
+    import os
+
     if not section_title or not isinstance(section_title, str):
         return None
+
     section_title = section_title.strip()
+    if not section_title:
+        return None
 
     pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
-        tmp_pdf_path = tmp_pdf.name
+        tmp_pdf.flush()
+        doc = fitz.open(tmp_pdf.name)
 
-    doc = fitz.open(tmp_pdf_path)
-    next_titles = [t for t in SECTION_ALIASES if t != section_title]
-
+    zoom_matrix = fitz.Matrix(scale_factor, scale_factor)  # Zoom out if < 1.0
     for page_number, page in enumerate(doc):
-        blocks = page.get_text("blocks")  # list of (x0, y0, x1, y1, "text", block_no, block_type)
-        start_idx = None
-        for i, block in enumerate(blocks):
-            if section_title.lower() in block[4].strip().lower():
-                start_idx = i
-                break
-        if start_idx is None:
-            continue  
-
-        # Find ending block (next section title)
-        end_idx = len(blocks)
-        for i in range(start_idx + 1, len(blocks)):
-            for alt in next_titles:
-                if alt.lower() in blocks[i][4].lower():
-                    end_idx = i
-                    break
-            if end_idx != len(blocks):
-                break
-
-        # Compute bounding box from start to end
-        section_blocks = blocks[start_idx:end_idx]
-        x0 = min(b[0] for b in section_blocks)
-        y0 = min(b[1] for b in section_blocks)
-        x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks)
-        rect = fitz.Rect(x0, y0, x1, y1)
-
-        # Render as image
-        pix = page.get_pixmap(clip=rect, dpi=200)  
-        image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
-        pix.save(image_path)
-        doc.close()
-        return image_path
+        try:
+            text_instances = page.search_for(section_title, hit_max=1)
+            if text_instances:
+                rect = text_instances[0]
+                # Expand rectangle height for full section display
+                rect.y1 = rect.y1 + section_height
+                pix = page.get_pixmap(matrix=zoom_matrix, clip=rect, dpi=150)
+                image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
+                pix.save(image_path)
+                doc.close()
+                return image_path
+        except Exception as e:
+            print(f"[ERROR] Failed on page {page_number}: {e}")
 
     doc.close()
     return None
