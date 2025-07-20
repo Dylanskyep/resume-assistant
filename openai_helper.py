@@ -132,7 +132,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
     section_img_paths = []
 
     for page in doc:
-        text_instances = page.search_for(section_title, hit_max=1)
+        text_instances = page.search_for(str(section_title), hit_max=1)
         if text_instances:
             rect = text_instances[0]
             rect.y1 += 200  
