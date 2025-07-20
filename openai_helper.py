@@ -155,7 +155,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 for w in words:
                     if w[4].lower() == matched_word:
                         rect = fitz.Rect(w[0], w[1], w[2], w[3] + 400)  
-                        zoom = 0.7
+                        zoom = 1.0
                         mat = fitz.Matrix(zoom, zoom)
                         pix = page.get_pixmap(matrix=mat, clip=rect)
                         unique_name = str(uuid.uuid4())[:8]
