@@ -86,12 +86,8 @@ def critique_section(section_title, section_content, job_focus):
                 Resume Text: {section_content}
                 Job Focus: {job_focus if job_focus else "General"}
                 Provide feedback on structure, content, and areas for improvement in a format
-                of two bullet points for
-                 strengths, two bullet points for weaknesses, and two bullet points for suggestions per section.
-                Organize your feedback clearly using labeled sections like:
-                In bold, write the section title with slightly larger font, followed by bullet points for each category.
-                In a font slightly smaller than the section title, write the strengths, weaknesses, and suggestions headings.
-                Then, list the bullet points after each corresponding heading.
+                of two bullet points for strengths, two bullet points for weaknesses, and two bullet points for suggestions per section.
+                Organize your feedback clearly using labeled sections.
                 Example:
                 {section_title}
                 
@@ -107,7 +103,12 @@ def critique_section(section_title, section_content, job_focus):
                 - ...
                 - ...
 
-                Make sure each section heading and bullet list is separated by a blank line.
+                Make sure:
+                - Each section heading (Strengths, Weaknesses, Suggestions) starts on its own line.
+                - Bullet points start with "- " and appear clearly beneath their section.
+                - There are no additional sections (such as "General Feedback") outside of the three requested ones.
+                - There is a **blank line** between the section title and the list.
+
                 """}
             ],
             "max_tokens": 1000,
@@ -159,6 +160,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
     for page_number, page in enumerate(doc):
         blocks = page.get_text("blocks")  # Each block: (x0, y0, x1, y1, "text", block_no, block_type)
 
+        # 1. Locate start of section
         start_idx = None
         for i, block in enumerate(blocks):
             if any(alias.lower() in block[4].strip().lower() for alias in current_aliases):
@@ -167,22 +169,29 @@ def extract_section_image_from_pdf(pdf_file, section_title):
         if start_idx is None:
             continue
 
-        # Search for the next title after start_idx
+        # 2. Try to find end of section via next known section
         end_idx = len(blocks)
         for j in range(start_idx + 1, len(blocks)):
-            if any(alt in blocks[j][4].lower() for alt in all_titles if alt != normalized_title):
+            next_text = blocks[j][4].strip().lower()
+            if any(next_text.startswith(alt) for alt in all_titles if alt != normalized_title):
                 end_idx = j
                 break
 
-        # Get bounding box from all blocks between start_idx and end_idx
-        buffer = 5  
-        section_blocks = blocks[start_idx:end_idx + buffer]
+        # 3. Collect section blocks
+        section_blocks = blocks[start_idx:end_idx]
+
+        # 4. If at end of page, extend remaining blocks
+        if end_idx == len(blocks):
+            section_blocks += blocks[end_idx:]
+
+        # 5. Compute bounding box with extra vertical padding
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks) + 100 
-        rect = fitz.Rect(x0, y0, x1, y1)
+        y1 = max(b[3] for b in section_blocks) + 200  # Generous bottom padding
 
+        # 6. Render clipped image
+        rect = fitz.Rect(x0, y0, x1, y1)
         pix = page.get_pixmap(clip=rect, dpi=160)
         image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
         pix.save(image_path)
