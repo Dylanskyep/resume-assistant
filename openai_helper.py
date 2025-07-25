@@ -176,12 +176,19 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 break
 
         # Get bounding box from all blocks between start_idx and end_idx
-        buffer = 5  
-        section_blocks = blocks[start_idx:end_idx + buffer]
+        # Only apply buffer if next section was NOT found (end of page)
+        if end_idx == len(blocks):
+            section_blocks = blocks[start_idx:end_idx + 5]
+        else:
+            section_blocks = blocks[start_idx:end_idx] 
+
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks) + 100 
+        y1 = max(b[3] for b in section_blocks)
+        height = y1 - y0
+        y1 += min(100, int(height * 0.25))
+
         rect = fitz.Rect(x0, y0, x1, y1)
 
         pix = page.get_pixmap(clip=rect, dpi=160)
