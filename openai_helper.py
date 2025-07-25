@@ -144,6 +144,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
         return None
     section_title = section_title.strip()
 
+    # Create temporary PDF file
     pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
@@ -156,53 +157,42 @@ def extract_section_image_from_pdf(pdf_file, section_title):
     current_aliases = SECTION_ALIASES.get(section_title, [section_title])
     normalized_title = section_title.lower()
 
-    captured_blocks = []
-    capturing = False
-    start_page = 0
-    end_page = 0
-
     for page_number, page in enumerate(doc):
-        blocks = page.get_text("blocks")
+        blocks = page.get_text("blocks")  # Each block: (x0, y0, x1, y1, "text", block_no, block_type)
+
+        start_idx = None
         for i, block in enumerate(blocks):
-            text = block[4].strip().lower()
+            if any(alias.lower() in block[4].strip().lower() for alias in current_aliases):
+                start_idx = i
+                break
+        if start_idx is None:
+            continue
 
-            # Start capturing when section title is found
-            if not capturing and any(alias.lower() in text for alias in current_aliases):
-                capturing = True
-                start_page = page_number
-                start_block = i
-
-            # Stop when another section title is found
-            if capturing and any(
-                text.startswith(alt) for alt in all_titles if alt != normalized_title
-            ):
-                end_page = page_number
-                capturing = False
+        # Search for the next title after start_idx
+        end_idx = len(blocks)
+        for j in range(start_idx + 1, len(blocks)):
+            if any(alt in blocks[j][4].lower() for alt in all_titles if alt != normalized_title):
+                end_idx = j
                 break
 
-        if capturing:
-            captured_blocks.extend([(page_number, b) for b in blocks])
-            end_page = page_number
+        # Get bounding box from all blocks between start_idx and end_idx
+        # Only apply buffer if next section was NOT found (end of page)
+        if end_idx == len(blocks):
+            section_blocks = blocks[start_idx:end_idx + 5]
+        else:
+            section_blocks = blocks[start_idx:end_idx]  # Strictly no buffer to avoid overlap
 
-    if not captured_blocks:
+        x0 = min(b[0] for b in section_blocks)
+        y0 = min(b[1] for b in section_blocks)
+        x1 = max(b[2] for b in section_blocks)
+        y1 = max(b[3] for b in section_blocks) + 100 
+        rect = fitz.Rect(x0, y0, x1, y1)
+
+        pix = page.get_pixmap(clip=rect, dpi=160)
+        image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
+        pix.save(image_path)
         doc.close()
-        return None
+        return image_path
 
-    # Compute bounding box over all captured blocks
-    x0 = min(b[1][0] for b in captured_blocks)
-    y0 = min(b[1][1] for b in captured_blocks)
-    x1 = max(b[1][2] for b in captured_blocks)
-    y1 = max(b[1][3] for b in captured_blocks)
-
-    # Adjust height padding
-    y1 += 80
-
-    # Extract from starting page only for now (multi-page clip is more complex)
-    clip_page = doc[start_page]
-    rect = fitz.Rect(x0, y0, x1, y1)
-    pix = clip_page.get_pixmap(clip=rect, dpi=160)
-
-    image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{start_page}.png"
-    pix.save(image_path)
     doc.close()
-    return image_path
+    return None
