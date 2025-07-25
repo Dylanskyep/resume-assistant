@@ -144,60 +144,59 @@ def extract_section_image_from_pdf(pdf_file, section_title):
         return None
     section_title = section_title.strip()
 
-    # Create temporary PDF file
     pdf_file.seek(0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
         tmp_pdf.write(pdf_file.read())
         tmp_pdf_path = tmp_pdf.name
 
     doc = fitz.open(tmp_pdf_path)
-
-    # Flatten all section aliases to lowercase
-    all_titles = [a.lower() for aliases in SECTION_ALIASES.values() for a in aliases]
     current_aliases = SECTION_ALIASES.get(section_title, [section_title])
-    normalized_title = section_title.lower()
+    all_aliases_flat = [a.lower() for aliases in SECTION_ALIASES.values() for a in aliases]
+    section_image = None
 
     for page_number, page in enumerate(doc):
-        blocks = page.get_text("blocks")  # Each block: (x0, y0, x1, y1, "text", block_no, block_type)
+        blocks = page.get_text("blocks")  # each block is (x0, y0, x1, y1, text, block_no, block_type)
+        print(f"\n📄 Page {page_number + 1} has {len(blocks)} text blocks:")
+        for idx, block in enumerate(blocks):
+            print(f"[{idx}] '{block[4].strip()}'  ->  y0={block[1]:.1f}, y1={block[3]:.1f}")
 
-        # 1. Locate start of section
+
+        # Find the block that starts this section
         start_idx = None
         for i, block in enumerate(blocks):
-            if any(alias.lower() in block[4].strip().lower() for alias in current_aliases):
+            text = block[4].strip().lower()
+            if any(alias.lower() in text for alias in current_aliases):
                 start_idx = i
                 break
         if start_idx is None:
             continue
 
-        # 2. Try to find end of section via next known section
+        # Try to find the next section heading block
         end_idx = len(blocks)
         for j in range(start_idx + 1, len(blocks)):
-            next_text = blocks[j][4].strip().lower()
-            if any(next_text.startswith(alt) for alt in all_titles if alt != normalized_title):
+            next_text = blocks[j][4].strip()
+            normalized = next_text.lower()
+            if any(normalized.startswith(alias) or alias in normalized for alias in all_aliases_flat):
                 end_idx = j
                 break
 
-        # 3. Get section blocks (limit buffer only if no end was found)
-        if end_idx == len(blocks):
-            section_blocks = blocks[start_idx:end_idx] + blocks[end_idx:end_idx + 5]
-        else:
-            section_blocks = blocks[start_idx:end_idx]
-
-        # 4. Compute bounding box + adaptive padding
+        # Crop to section's bounding box
+        section_blocks = blocks[start_idx:end_idx]
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
         y1 = max(b[3] for b in section_blocks)
-        height = y1 - y0
-        y1 += min(100, int(height * 0.25))  # Add up to 25% more height, max 100
 
-        # 5. Clip and render
+        # Apply minimal padding to y1 (bottom)
+        padding = min(100, int((y1 - y0) * 0.2))
+        y1 += padding
+
         rect = fitz.Rect(x0, y0, x1, y1)
         pix = page.get_pixmap(clip=rect, dpi=160)
         image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
         pix.save(image_path)
-        doc.close()
-        return image_path
+        section_image = image_path
+        break  # Only one match needed
 
     doc.close()
-    return None
+    return section_image
