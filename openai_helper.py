@@ -177,20 +177,21 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 end_idx = j
                 break
 
-        # 3. Collect section blocks
-        section_blocks = blocks[start_idx:end_idx]
-
-        # 4. If at end of page, extend remaining blocks
+        # 3. Get section blocks (limit buffer only if no end was found)
         if end_idx == len(blocks):
-            section_blocks += blocks[end_idx:]
+            section_blocks = blocks[start_idx:end_idx] + blocks[end_idx:end_idx + 5]
+        else:
+            section_blocks = blocks[start_idx:end_idx]
 
-        # 5. Compute bounding box with extra vertical padding
+        # 4. Compute bounding box + adaptive padding
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks) + 200  # Generous bottom padding
+        y1 = max(b[3] for b in section_blocks)
+        height = y1 - y0
+        y1 += min(100, int(height * 0.25))  # Add up to 25% more height, max 100
 
-        # 6. Render clipped image
+        # 5. Clip and render
         rect = fitz.Rect(x0, y0, x1, y1)
         pix = page.get_pixmap(clip=rect, dpi=160)
         image_path = f"/tmp/section_{section_title.replace(' ', '_')}_{page_number}.png"
