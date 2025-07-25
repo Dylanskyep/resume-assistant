@@ -93,7 +93,8 @@ def critique_section(section_title, section_content, job_focus):
                 In a font slightly smaller than the section title, write the strengths, weaknesses, and suggestions headings.
                 Then, list the bullet points after each corresponding heading.
                 Example:
-                Title of Section in Bold and slightly larger font
+                {section_title}
+                
                 Strengths
                 - ...
                 - ...
@@ -106,7 +107,7 @@ def critique_section(section_title, section_content, job_focus):
                 - ...
                 - ...
 
-                Make sure each section is adequately separated by each section with enough spacing to differentiate them.
+                Make sure each section heading and bullet list is separated by a blank line.
                 """}
             ],
             "max_tokens": 1000,
@@ -164,7 +165,7 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 start_idx = i
                 break
         if start_idx is None:
-            continue  # Section title not found on this page
+            continue
 
         # Search for the next title after start_idx
         end_idx = len(blocks)
@@ -174,11 +175,12 @@ def extract_section_image_from_pdf(pdf_file, section_title):
                 break
 
         # Get bounding box from all blocks between start_idx and end_idx
-        section_blocks = blocks[start_idx:end_idx]
+        buffer = 5  
+        section_blocks = blocks[start_idx:end_idx + buffer]
         x0 = min(b[0] for b in section_blocks)
         y0 = min(b[1] for b in section_blocks)
         x1 = max(b[2] for b in section_blocks)
-        y1 = max(b[3] for b in section_blocks)
+        y1 = max(b[3] for b in section_blocks) + 100 
         rect = fitz.Rect(x0, y0, x1, y1)
 
         pix = page.get_pixmap(clip=rect, dpi=160)
