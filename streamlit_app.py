@@ -1,7 +1,7 @@
 from openai_helper import generate_bullets, critique_resume, extract_full_resume_image
 import streamlit as st
 import os
-
+import fitz
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -231,45 +231,38 @@ elif st.session_state.page == "main":
                     image_path = extract_full_resume_image(pdf_file)
 
                     st.subheader("Results")
+
+                    # Sticky resume image CSS
                     st.markdown("""
                         <style>
-                        .resume-layout {
-                            display: flex;
-                            align-items: flex-start;
-                        }
-                        .sticky-resume {
+                        .sticky-left {
+                            position: -webkit-sticky;
                             position: sticky;
                             top: 120px;
-                            flex: 0 0 40%;
-                            margin-right: 40px;
-                            max-height: 90vh;
-                            overflow: auto;
-                            border: 1px solid #ddd;
-                            border-radius: 6px;
-                            background-color: white;
-                            padding: 0.5rem;
+                            align-self: flex-start;
+                            z-index: 0;
                         }
-                        .critique-section {
-                            flex: 1;
+                        .sticky-left img {
+                            border: 1px solid #ccc;
+                            border-radius: 6px;
+                            max-width: 100%;
+                            height: auto;
                         }
                         </style>
                     """, unsafe_allow_html=True)
 
-                    st.markdown('<div class="resume-layout">', unsafe_allow_html=True)
+                    # Proper layout using Streamlit columns
+                    col1, col2 = st.columns([1, 2], gap="large")
 
-                    # Resume Image Column (Sticky)
-                    st.markdown('<div class="sticky-resume">', unsafe_allow_html=True)
-                    if image_path:
-                        st.image(image_path, caption="Full Resume", use_container_width=True)
-                    else:
-                        st.info("Could not generate full resume image.")
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    with col1:
+                        if image_path:
+                            st.markdown('<div class="sticky-left">', unsafe_allow_html=True)
+                            st.image(image_path, caption="Full Resume", use_container_width=True)
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        else:
+                            st.info("Could not generate full resume image.")
 
-                    # Critique Column
-                    st.markdown('<div class="critique-section">', unsafe_allow_html=True)
-                    for section_title, section_content, critique in critiques:
-                        st.markdown(f"### {section_title}")
-                        st.markdown(critique, unsafe_allow_html=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
-
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    with col2:
+                        for section_title, section_content, critique in critiques:
+                            st.markdown(f"### {section_title}")
+                            st.markdown(critique, unsafe_allow_html=True)
