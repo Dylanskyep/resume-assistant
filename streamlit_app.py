@@ -1,6 +1,7 @@
 from openai_helper import generate_bullets, critique_resume, extract_full_resume_image
 import streamlit as st
 import os
+import base64
 
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
