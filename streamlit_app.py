@@ -4,6 +4,27 @@ import os
 
 st.set_page_config(layout="wide", page_title="Resume Assistant", page_icon="📝")
 
+st.markdown("""
+    <style>
+    .block-container {
+        max-width: 75%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 1rem !important;
+        padding-bottom: 5rem;
+        text-align: center;
+    }
+    h1, h2, p, .stButton, .stTextInput, .stTextArea, .stFileUploader, .stDownloadButton {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    textarea, input {
+        text-align: center !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("Resume Assistant")
 tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
