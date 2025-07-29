@@ -232,37 +232,52 @@ elif st.session_state.page == "main":
 
                     st.subheader("Results")
 
-                    # Sticky resume image CSS
-                    st.markdown("""
-                        <style>
-                        .sticky-left {
-                            position: -webkit-sticky;
-                            position: sticky;
-                            top: 120px;
-                            align-self: flex-start;
-                            z-index: 0;
-                        }
-                        .sticky-left img {
-                            border: 1px solid #ccc;
-                            border-radius: 6px;
-                            max-width: 100%;
-                            height: auto;
-                        }
-                        </style>
-                    """, unsafe_allow_html=True)
+                    if image_path:
+                        st.markdown("""
+                            <style>
+                            .two-column-container {
+                                display: flex;
+                                gap: 4rem;
+                            }
+                            .left-sticky {
+                                position: sticky;
+                                top: 100px;
+                                flex: 1;
+                                max-width: 50%;
+                                height: 80vh;
+                                overflow: auto;
+                            }
+                            .left-sticky img {
+                                width: 100%;
+                                height: auto;
+                                border: 1px solid #ccc;
+                                border-radius: 8px;
+                            }
+                            .right-content {
+                                flex: 1;
+                                max-width: 50%;
+                            }
+                            </style>
+                        """, unsafe_allow_html=True)
 
-                    # Proper layout using Streamlit columns
-                    col1, col2 = st.columns([1, 2], gap="large")
+                        # HTML container for layout
+                        st.markdown('<div class="two-column-container">', unsafe_allow_html=True)
 
-                    with col1:
-                        if image_path:
-                            st.markdown('<div class="sticky-left">', unsafe_allow_html=True)
-                            st.image(image_path, caption="Full Resume", use_container_width=True)
-                            st.markdown('</div>', unsafe_allow_html=True)
-                        else:
-                            st.info("Could not generate full resume image.")
+                        # Left sticky image
+                        st.markdown(f"""
+                            <div class="left-sticky">
+                                <img src="data:image/png;base64,{Path(image_path).read_bytes().hex()}" alt="Resume" />
+                            </div>
+                        """, unsafe_allow_html=True)
 
-                    with col2:
+                        # Right critique section
+                        st.markdown('<div class="right-content">', unsafe_allow_html=True)
                         for section_title, section_content, critique in critiques:
                             st.markdown(f"### {section_title}")
                             st.markdown(critique, unsafe_allow_html=True)
+                        st.markdown('</div>', unsafe_allow_html=True)
+
+                        st.markdown('</div>', unsafe_allow_html=True)
+
+                    else:
+                        st.warning("Could not generate resume image.")
