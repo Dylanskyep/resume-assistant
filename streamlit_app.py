@@ -2,8 +2,10 @@ from openai_helper import generate_bullets, critique_resume, extract_section_ima
 import streamlit as st
 import os
 
+
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+# only disable scrolling on welcome page
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -17,6 +19,7 @@ if st.session_state.page == "welcome":
             overflow: hidden;
             background-color: transparent !important;
         }
+
         .lottie-bg-container {
             position: fixed;
             top: 0;
@@ -32,41 +35,74 @@ if st.session_state.page == "welcome":
 
         <iframe class="lottie-bg-container" srcdoc='
             <!DOCTYPE html>
-            <html><head>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-            <style>
-                html, body { margin: 0; padding: 0; height: 100%; width: 100%; background: transparent; overflow: hidden; }
-                #lottie { width: 100vw; height: 100vh; transform: scale(1.5); transform-origin: center; }
-            </style>
+            <html>
+            <head>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+                <style>
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                        height: 100%;
+                        width: 100%;
+                        background: transparent;
+                        overflow: hidden;
+                    }
+                    #lottie {
+                        width: 100vw;
+                        height: 100vh;
+                        transform: scale(1.5); 
+                        transform-origin: center;
+                    }
+                </style>
             </head>
-            <body><div id="lottie"></div>
-            <script>
-                lottie.loadAnimation({ container: document.getElementById("lottie"), renderer: "svg", loop: true, autoplay: true,
-                    path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json" });
-            </script>
-            </body></html>' width="100%" height="100%" frameborder="0"></iframe>
+            <body>
+                <div id="lottie"></div>
+                <script>
+                    lottie.loadAnimation({
+                        container: document.getElementById("lottie"),
+                        renderer: "svg",
+                        loop: true,
+                        autoplay: true,
+                        path: "https://lottie.host/090ccb00-42b0-44c2-ad52-8a15c2eca2fa/leCYtLJZo5.json"
+                    });
+                </script>
+            </body>
+            </html>
+        ' width="100%" height="100%" frameborder="0"></iframe>
     """, unsafe_allow_html=True)
 
+# Common styling
 st.markdown("""
     <style>
     .block-container {
         max-width: 75%;
         margin: auto;
-        padding-top: 1rem;
+        padding-top: 1rem !important;
         padding-bottom: 5rem;
     }
     h1, p, .stButton, .stTextInput, .stTextArea, .stFileUploader {
+        z-index: 1;
+        position: relative;
+        font_size: 20px;
         text-align: center;
     }
-    input, textarea { font-size: 18px !important; }
+    input, textarea {
+        font-size: 18px !important;
+    }
     .welcome-title {
-        font-size: 150px; font-weight: bold; text-align: center;
-        margin-top: 2rem; margin-bottom: 3rem;
+        font-size: 150px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 3rem;
         animation: fadeIn 1.3s ease-out forwards;
     }
-    .welcome-desc {
-        font-size: 35px; color: #A9A9A9; text-align: center;
-        margin-top: 1rem; margin-bottom: 2rem;
+    .welcome-desc {   
+        font-size: 35px;
+        color: #A9A9A9;
+        text-align: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
         animation: fadeIn 1.6s ease-out forwards;
     }
     @keyframes fadeIn {
@@ -76,19 +112,84 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# Welcome Page
 if st.session_state.page == "welcome":
+    st.markdown("""
+        <style>
+        .lottie-welcome-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        iframe.lottie-welcome {
+            width: 400px;
+            height: 400px;
+            opacity: 0.7;
+            border: none;
+            overflow: hidden;
+        }
+        </style>
+
+        <div class="lottie-welcome-container">
+            <iframe class="lottie-welcome" srcdoc='
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+                    <style>
+                        html, body {
+                            margin: 0;
+                            padding: 0;
+                            height: 100vh;
+                            width: 100vw;
+                            background: transparent;
+                            overflow: hidden;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+                        #lottie {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div id="lottie"></div>
+                    <script>
+                        lottie.loadAnimation({
+                            container: document.getElementById("lottie"),
+                            renderer: "svg",
+                            loop: true,
+                            autoplay: true,
+                            path: "https://lottie.host/c8f76c44-71ab-41ed-b30d-5975839c1cc7/YAwYaiesCs.json"
+                        });
+                    </script>
+                </body>
+                </html>
+            '></iframe>
+        </div>
+    """, unsafe_allow_html=True)
+
     st.markdown("""<h1 class="welcome-title">Welcome to the Resume Assistant</h1>""", unsafe_allow_html=True)
-    st.markdown("""<p class="welcome-desc">This app helps you generate impactful bullet points and critiques for resumes.</p>""", unsafe_allow_html=True)
+    st.markdown("""<p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents! 
+                Click the button below to navigate to the main page.</p>""", unsafe_allow_html=True)
+
     if st.button("→"):
         st.session_state.page = "main"
         st.rerun()
 
+# Main Page
 elif st.session_state.page == "main":
     st.markdown("""
         <style>
         .animated-title {
-            font-size: 40px; font-weight: 800;
-            text-align: center; margin-top: 2rem;
+            font-size: 40px;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 2rem;
             animation: fadeInDown 1.6s ease-out forwards;
         }
         @keyframes fadeInDown {
@@ -97,10 +198,11 @@ elif st.session_state.page == "main":
         }
         </style>
     """, unsafe_allow_html=True)
-    st.markdown('<h1 class="animated-title">Create and Review Resumes using AI</h1>', unsafe_allow_html=True)
 
+    st.markdown('<h1 class="animated-title">Create and Review Resumes using AI</h1>', unsafe_allow_html=True)
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
+# Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -114,8 +216,9 @@ elif st.session_state.page == "main":
                         st.write(line.strip())
                 st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
             else:
-                st.warning("Please enter both experience details and job title.")
+                st.write("Please enter both experience details and job title to generate bullet points.")
 
+# Resume Critique Tab
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
