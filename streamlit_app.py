@@ -233,54 +233,53 @@ elif st.session_state.page == "main":
                     st.subheader("Results")
 
                     if image_path:
-                        st.markdown("""
-                            <style>
-                            .two-column-container {
-                                display: flex;
-                                gap: 4rem;
-                            }
-                            .left-sticky {
-                                position: sticky;
-                                top: 100px;
-                                flex: 1;
-                                max-width: 50%;
-                                height: 80vh;
-                                overflow: auto;
-                            }
-                            .left-sticky img {
-                                width: 100%;
-                                height: auto;
-                                border: 1px solid #ccc;
-                                border-radius: 8px;
-                            }
-                            .right-content {
-                                flex: 1;
-                                max-width: 50%;
-                            }
-                            </style>
-                        """, unsafe_allow_html=True)
-
-                        st.markdown('<div class="two-column-container">', unsafe_allow_html=True)
-
-                        # Read and encode image to base64
                         with open(image_path, "rb") as f:
                             image_bytes = f.read()
                             encoded_image = base64.b64encode(image_bytes).decode()
 
-                        # Sticky left image
-                        st.markdown(f"""
-                            <div class="left-sticky">
-                                <img src="data:image/png;base64,{encoded_image}" alt="Resume" />
-                            </div>
-                        """, unsafe_allow_html=True)
+                        full_html = f"""
+                            <style>
+                            .two-column-container {{
+                                display: flex;
+                                gap: 2rem;
+                                margin-top: 2rem;
+                            }}
+                            .left-sticky {{
+                                position: sticky;
+                                top: 80px;
+                                flex: 1;
+                                max-width: 50%;
+                                height: 90vh;
+                                overflow-y: auto;
+                            }}
+                            .left-sticky img {{
+                                width: 100%;
+                                height: auto;
+                                border: 1px solid #ccc;
+                                border-radius: 8px;
+                            }}
+                            .right-content {{
+                                flex: 1;
+                                max-width: 50%;
+                                overflow-wrap: break-word;
+                            }}
+                            .right-content h3 {{
+                                margin-top: 1.5rem;
+                            }}
+                            </style>
 
-                        # Right critique content
-                        st.markdown('<div class="right-content">', unsafe_allow_html=True)
+                            <div class="two-column-container">
+                                <div class="left-sticky">
+                                    <img src="data:image/png;base64,{encoded_image}" alt="Resume" />
+                                </div>
+                                <div class="right-content">
+                        """
+
                         for section_title, section_content, critique in critiques:
-                            st.markdown(f"### {section_title}")
-                            st.markdown(critique, unsafe_allow_html=True)
-                        st.markdown('</div>', unsafe_allow_html=True)
+                            full_html += f"<h3>{section_title}</h3>{critique}"
 
-                        st.markdown('</div>', unsafe_allow_html=True)
+                        full_html += "</div></div>"
+
+                        st.markdown(full_html, unsafe_allow_html=True)
                     else:
                         st.warning("Could not generate resume image.")
