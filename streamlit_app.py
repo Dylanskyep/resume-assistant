@@ -1,8 +1,7 @@
 from openai_helper import generate_bullets, critique_resume, extract_section_image_from_pdf
 import streamlit as st
 import os
-import fitz
-import tempfile
+
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -224,29 +223,53 @@ elif st.session_state.page == "main":
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
         job_focus = st.text_input("Enter the job focus (optional but helpful):")
+        
         if pdf_file is not None:
             if st.button("Critique Resume"):
                 with st.spinner("Generating resume critiques..."):
-                    critique = critique_resume(pdf_file, job_focus)
-                    if critique:
-                        st.subheader("Results")
-                        for title, content, critique in critique:
-                            st.markdown(f"## {title}")
-                            
-                            col1, col2 = st.columns([1, 1])
-                            with col1:
-                                st.subheader("Resume Section Image")
-                                img_path = extract_section_image_from_pdf(pdf_file, title)
-                                if img_path:
-                                    st.image(img_path, caption=title, use_container_width=True)
-                                else:
-                                    st.info("Could not find section image in PDF.")
+                    critiques = critique_resume(pdf_file, job_focus)
+                    image_path = extract_full_resume_image(pdf_file)
 
-                            with col2:
-                                st.subheader("Critique")
-                                st.markdown(critique, unsafe_allow_html=True)
-                                    # PDF download logic 
-        else:
-            st.write("Please upload a PDF file of your resume before clicking the button.")
+                    st.subheader("Results")
+                    st.markdown("""
+                        <style>
+                        .resume-layout {
+                            display: flex;
+                            align-items: flex-start;
+                        }
+                        .sticky-resume {
+                            position: sticky;
+                            top: 120px;
+                            flex: 0 0 40%;
+                            margin-right: 40px;
+                            max-height: 90vh;
+                            overflow: auto;
+                            border: 1px solid #ddd;
+                            border-radius: 6px;
+                            background-color: white;
+                            padding: 0.5rem;
+                        }
+                        .critique-section {
+                            flex: 1;
+                        }
+                        </style>
+                    """, unsafe_allow_html=True)
 
-        
+                    st.markdown('<div class="resume-layout">', unsafe_allow_html=True)
+
+                    # Resume Image Column (Sticky)
+                    st.markdown('<div class="sticky-resume">', unsafe_allow_html=True)
+                    if image_path:
+                        st.image(image_path, caption="Full Resume", use_container_width=True)
+                    else:
+                        st.info("Could not generate full resume image.")
+                    st.markdown('</div>', unsafe_allow_html=True)
+
+                    # Critique Column
+                    st.markdown('<div class="critique-section">', unsafe_allow_html=True)
+                    for section_title, section_content, critique in critiques:
+                        st.markdown(f"### {section_title}")
+                        st.markdown(critique, unsafe_allow_html=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
+
+                    st.markdown('</div>', unsafe_allow_html=True)
