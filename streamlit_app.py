@@ -5,7 +5,7 @@ import base64
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# only disable scrolling on welcome page
+# Only disable scrolling on welcome page
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 
@@ -19,7 +19,6 @@ if st.session_state.page == "welcome":
             overflow: hidden;
             background-color: transparent !important;
         }
-
         .lottie-bg-container {
             position: fixed;
             top: 0;
@@ -32,7 +31,6 @@ if st.session_state.page == "welcome":
             border: none;
         }
         </style>
-
         <iframe class="lottie-bg-container" srcdoc='
             <!DOCTYPE html>
             <html>
@@ -67,11 +65,10 @@ if st.session_state.page == "welcome":
                     });
                 </script>
             </body>
-            </html>
-        ' width="100%" height="100%" frameborder="0"></iframe>
+            </html>' width="100%" height="100%" frameborder="0"></iframe>
     """, unsafe_allow_html=True)
 
-# Common styling
+# Shared CSS
 st.markdown("""
     <style>
     .block-container {
@@ -97,7 +94,7 @@ st.markdown("""
         margin-bottom: 3rem;
         animation: fadeIn 1.3s ease-out forwards;
     }
-    .welcome-desc {   
+    .welcome-desc {
         font-size: 35px;
         color: #A9A9A9;
         text-align: center;
@@ -112,76 +109,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Welcome Page
+# Welcome page
 if st.session_state.page == "welcome":
-    st.markdown("""
-        <style>
-        .lottie-welcome-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-        iframe.lottie-welcome {
-            width: 400px;
-            height: 400px;
-            opacity: 0.7;
-            border: none;
-            overflow: hidden;
-        }
-        </style>
-
-        <div class="lottie-welcome-container">
-            <iframe class="lottie-welcome" srcdoc='
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-                    <style>
-                        html, body {
-                            margin: 0;
-                            padding: 0;
-                            height: 100vh;
-                            width: 100vw;
-                            background: transparent;
-                            overflow: hidden;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                        }
-                        #lottie {
-                            width: 100%;
-                            height: 100%;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div id="lottie"></div>
-                    <script>
-                        lottie.loadAnimation({
-                            container: document.getElementById("lottie"),
-                            renderer: "svg",
-                            loop: true,
-                            autoplay: true,
-                            path: "https://lottie.host/c8f76c44-71ab-41ed-b30d-5975839c1cc7/YAwYaiesCs.json"
-                        });
-                    </script>
-                </body>
-                </html>
-            '></iframe>
-        </div>
-    """, unsafe_allow_html=True)
-
     st.markdown("""<h1 class="welcome-title">Welcome to the Resume Assistant</h1>""", unsafe_allow_html=True)
     st.markdown("""<p class="welcome-desc">This app helps you generate impactful bullet points for your resume and critique existing resumes to improve its contents! 
                 Click the button below to navigate to the main page.</p>""", unsafe_allow_html=True)
-
     if st.button("→"):
         st.session_state.page = "main"
         st.rerun()
 
-# Main Page
+# Main page
 elif st.session_state.page == "main":
     st.markdown("""
         <style>
@@ -202,7 +139,6 @@ elif st.session_state.page == "main":
     st.markdown('<h1 class="animated-title">Create and Review Resumes using AI</h1>', unsafe_allow_html=True)
     tab1, tab2 = st.tabs(["Generate Bullet Points", "Critique Resume"])
 
-# Bullet Points Tab
     with tab1:
         st.header("Generate Resume Experience Bullet Points")
         experience = st.text_area("Enter your experience details:", height=150)
@@ -216,14 +152,13 @@ elif st.session_state.page == "main":
                         st.write(line.strip())
                 st.download_button("Download Bullet Points", "\n".join(bullets), file_name="bullets.txt")
             else:
-                st.write("Please enter both experience details and job title to generate bullet points.")
+                st.warning("Please enter both experience details and job title to generate bullet points.")
 
-# Resume Critique Tab
     with tab2:
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
         job_focus = st.text_input("Enter the job focus (optional but helpful):")
-        
+
         if pdf_file is not None:
             if st.button("Critique Resume"):
                 with st.spinner("Generating resume critiques..."):
@@ -237,15 +172,16 @@ elif st.session_state.page == "main":
                             <style>
                             .two-column-container {
                                 display: flex;
-                                gap: 4rem;
+                                flex-direction: row;
+                                gap: 2rem;
                             }
                             .left-sticky {
                                 position: sticky;
                                 top: 100px;
+                                height: 90vh;
+                                overflow-y: auto;
                                 flex: 1;
-                                max-width: 50%;
-                                height: 80vh;
-                                overflow: auto;
+                                max-width: 48%;
                             }
                             .left-sticky img {
                                 width: 100%;
@@ -255,26 +191,23 @@ elif st.session_state.page == "main":
                             }
                             .right-content {
                                 flex: 1;
-                                max-width: 50%;
+                                max-width: 52%;
                             }
                             </style>
                         """, unsafe_allow_html=True)
 
                         st.markdown('<div class="two-column-container">', unsafe_allow_html=True)
 
-                        # Read and encode image to base64
                         with open(image_path, "rb") as f:
                             image_bytes = f.read()
                             encoded_image = base64.b64encode(image_bytes).decode()
 
-                        # Sticky left image
                         st.markdown(f"""
                             <div class="left-sticky">
                                 <img src="data:image/png;base64,{encoded_image}" alt="Resume" />
                             </div>
                         """, unsafe_allow_html=True)
 
-                        # Right critique content
                         st.markdown('<div class="right-content">', unsafe_allow_html=True)
                         for section_title, section_content, critique in critiques:
                             st.markdown(f"### {section_title}")
