@@ -220,65 +220,65 @@ elif st.session_state.page == "main":
 
 # Resume Critique Tab
     with tab2:
-    st.header("Critique Resume")
-    pdf_file = st.file_uploader("Upload PDF Resume", type=["pdf"])
-    job_focus = st.text_input("Enter the job focus (optional):")
+        st.header("Critique Resume")
+        pdf_file = st.file_uploader("Upload PDF Resume", type=["pdf"])
+        job_focus = st.text_input("Enter the job focus (optional):")
 
-    if pdf_file and st.button("Critique Resume"):
-        with st.spinner("Generating critique..."):
-            critiques = critique_resume(pdf_file, job_focus)
-            image_path = extract_full_resume_image(pdf_file)
+        if pdf_file and st.button("Critique Resume"):
+            with st.spinner("Generating critique..."):
+                critiques = critique_resume(pdf_file, job_focus)
+                image_path = extract_full_resume_image(pdf_file)
 
-        if not critiques or not image_path:
-            st.warning("Could not generate results. Check that the resume was parsed correctly.")
-        else:
-            with open(image_path, "rb") as f:
-                encoded = base64.b64encode(f.read()).decode()
+            if not critiques or not image_path:
+                st.warning("Could not generate results. Check that the resume was parsed correctly.")
+            else:
+                with open(image_path, "rb") as f:
+                    encoded = base64.b64encode(f.read()).decode()
 
-            st.markdown("""
-                <style>
-                .container {
-                    display: flex;
-                    gap: 2rem;
-                    margin-top: 2rem;
-                }
-                .left-pane {
-                    position: sticky;
-                    top: 100px;
-                    flex: 1;
-                    max-width: 45%;
-                    height: 80vh;
-                    overflow-y: auto;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    background-color: #fff;
-                }
-                .left-pane img {
-                    width: 100%;
-                    height: auto;
-                    display: block;
-                }
-                .right-pane {
-                    flex: 1;
-                    max-width: 55%;
-                    overflow-x: hidden;
-                }
-                </style>
-            """, unsafe_allow_html=True)
+                st.markdown("""
+                    <style>
+                    .container {
+                        display: flex;
+                        gap: 2rem;
+                        margin-top: 2rem;
+                    }
+                    .left-pane {
+                        position: sticky;
+                        top: 100px;
+                        flex: 1;
+                        max-width: 45%;
+                        height: 80vh;
+                        overflow-y: auto;
+                        border: 1px solid #ccc;
+                        border-radius: 8px;
+                        background-color: #fff;
+                    }
+                    .left-pane img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                    }
+                    .right-pane {
+                        flex: 1;
+                        max-width: 55%;
+                        overflow-x: hidden;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
 
-            st.markdown('<div class="container">', unsafe_allow_html=True)
+                st.markdown('<div class="container">', unsafe_allow_html=True)
 
-            # Left: Resume Image (Sticky)
-            st.markdown(f'''
-                <div class="left-pane">
-                    <img src="data:image/png;base64,{encoded}" alt="Resume Image">
-                </div>
-            ''', unsafe_allow_html=True)
+                # Left: Resume Image (Sticky)
+                st.markdown(f'''
+                    <div class="left-pane">
+                        <img src="data:image/png;base64,{encoded}" alt="Resume Image">
+                    </div>
+                ''', unsafe_allow_html=True)
 
-            # Right: Critique Text
-            st.markdown('<div class="right-pane">', unsafe_allow_html=True)
-            for section_title, _, section_critique in critiques:
-                st.markdown(f"### {section_title}")
-                st.markdown(section_critique, unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
-        
+                # Right: Critique Text
+                st.markdown('<div class="right-pane">', unsafe_allow_html=True)
+                for section_title, _, section_critique in critiques:
+                    st.markdown(f"### {section_title}")
+                    st.markdown(section_critique, unsafe_allow_html=True)
+                st.markdown('</div></div>', unsafe_allow_html=True)
+            
