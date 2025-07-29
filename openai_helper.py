@@ -35,20 +35,22 @@ def generate_bullets(experience, job_title):
 def critique_resume(pdf_file, job_focus):
     pdf_file.seek(0)
     doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
-    text = "\n".join(page.get_text() for page in doc)
+    full_text = "\n".join(page.get_text() for page in doc)
     doc.close()
 
     all_aliases = [a for aliases in SECTION_ALIASES.values() for a in aliases]
-    pattern = r'\n(?=\s*(' + '|'.join(re.escape(a) for a in all_aliases) + r')\s*[:\n])'
-    chunks = re.split(pattern, text, flags=re.IGNORECASE)
+    pattern = r"(?:^|\n)(?=\s*(" + '|'.join(re.escape(a) for a in all_aliases) + r")\s*[\n:]?)"
+    chunks = re.split(pattern, full_text, flags=re.IGNORECASE)
 
     sections = []
-    for i in range(1, len(chunks), 2):
+    i = 1
+    while i < len(chunks):
         raw_title = chunks[i]
         section_title = normalize_section_name(raw_title)
-        section_content = chunks[i + 1].strip()
+        section_content = chunks[i + 1].strip() if (i + 1) < len(chunks) else ""
         critique = critique_section(section_title, section_content, job_focus)
         sections.append((section_title, section_content, critique))
+        i += 2
 
     return sections
 
