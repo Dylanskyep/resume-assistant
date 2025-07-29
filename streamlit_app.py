@@ -1,7 +1,7 @@
 from openai_helper import generate_bullets, critique_resume, extract_full_resume_image
 import streamlit as st
 import os
-import fitz
+import base64
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -260,17 +260,21 @@ elif st.session_state.page == "main":
                             </style>
                         """, unsafe_allow_html=True)
 
-                        # HTML container for layout
                         st.markdown('<div class="two-column-container">', unsafe_allow_html=True)
 
-                        # Left sticky image
+                        # Read and encode image to base64
+                        with open(image_path, "rb") as f:
+                            image_bytes = f.read()
+                            encoded_image = base64.b64encode(image_bytes).decode()
+
+                        # Sticky left image
                         st.markdown(f"""
                             <div class="left-sticky">
-                                <img src="data:image/png;base64,{Path(image_path).read_bytes().hex()}" alt="Resume" />
+                                <img src="data:image/png;base64,{encoded_image}" alt="Resume" />
                             </div>
                         """, unsafe_allow_html=True)
 
-                        # Right critique section
+                        # Right critique content
                         st.markdown('<div class="right-content">', unsafe_allow_html=True)
                         for section_title, section_content, critique in critiques:
                             st.markdown(f"### {section_title}")
@@ -278,6 +282,5 @@ elif st.session_state.page == "main":
                         st.markdown('</div>', unsafe_allow_html=True)
 
                         st.markdown('</div>', unsafe_allow_html=True)
-
                     else:
                         st.warning("Could not generate resume image.")
