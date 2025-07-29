@@ -1,7 +1,8 @@
-from openai_helper import generate_bullets, critique_resume, extract_full_resume_image
+from openai_helper import generate_bullets, critique_resume, extract_section_image_from_pdf
 import streamlit as st
 import os
-import base64
+import fitz
+import tempfile
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -223,63 +224,29 @@ elif st.session_state.page == "main":
         st.header("Generate Resume Critiques")
         pdf_file = st.file_uploader("Upload your resume as a PDF file", type=["pdf"])
         job_focus = st.text_input("Enter the job focus (optional but helpful):")
-        
         if pdf_file is not None:
             if st.button("Critique Resume"):
                 with st.spinner("Generating resume critiques..."):
-                    critiques = critique_resume(pdf_file, job_focus)
-                    image_path = extract_full_resume_image(pdf_file)
+                    critique = critique_resume(pdf_file, job_focus)
+                    if critique:
+                        st.subheader("Results")
+                        for title, content, critique in critique:
+                            st.markdown(f"## {title}")
+                            
+                            col1, col2 = st.columns([1, 1])
+                            with col1:
+                                st.subheader("Resume Section Image")
+                                img_path = extract_section_image_from_pdf(pdf_file, title)
+                                if img_path:
+                                    st.image(img_path, caption=title, use_container_width=True)
+                                else:
+                                    st.info("Could not find section image in PDF.")
 
-                    st.subheader("Results")
+                            with col2:
+                                st.subheader("Critique")
+                                st.markdown(critique, unsafe_allow_html=True)
+                                    # PDF download logic 
+        else:
+            st.write("Please upload a PDF file of your resume before clicking the button.")
 
-                    if image_path:
-                        with open(image_path, "rb") as f:
-                            image_bytes = f.read()
-                            encoded_image = base64.b64encode(image_bytes).decode()
-
-                        full_html = f"""
-                            <style>
-                            .two-column-container {{
-                                display: flex;
-                                gap: 2rem;
-                                margin-top: 2rem;
-                            }}
-                            .left-sticky {{
-                                position: sticky;
-                                top: 80px;
-                                flex: 1;
-                                max-width: 50%;
-                                height: 90vh;
-                                overflow-y: auto;
-                            }}
-                            .left-sticky img {{
-                                width: 100%;
-                                height: auto;
-                                border: 1px solid #ccc;
-                                border-radius: 8px;
-                            }}
-                            .right-content {{
-                                flex: 1;
-                                max-width: 50%;
-                                overflow-wrap: break-word;
-                            }}
-                            .right-content h3 {{
-                                margin-top: 1.5rem;
-                            }}
-                            </style>
-
-                            <div class="two-column-container">
-                                <div class="left-sticky">
-                                    <img src="data:image/png;base64,{encoded_image}" alt="Resume" />
-                                </div>
-                                <div class="right-content">
-                        """
-
-                        for section_title, section_content, critique in critiques:
-                            full_html += f"<h3>{section_title}</h3>{critique}"
-
-                        full_html += "</div></div>"
-
-                        st.markdown(full_html, unsafe_allow_html=True)
-                    else:
-                        st.warning("Could not generate resume image.")
+        
