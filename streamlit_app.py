@@ -1,4 +1,4 @@
-from openai_helper import generate_bullets, critique_resume
+from openai_helper import generate_bullets, critique_resume, extract_full_resume_image
 import streamlit as st
 import os
 
